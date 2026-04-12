@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PÉ DE MEIA — 3ª GRE</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F5F4F0;
+    --surface: #FFFFFF;
+    --border: #E2E0D8;
+    --border-strong: #C8C5BB;
+    --text: #1A1916;
+    --text-muted: #6B6860;
+    --text-faint: #9E9C94;
+    --blue: #1B4FD8;
+    --blue-light: #EEF2FF;
+    --blue-dark: #1239A8;
+    --green: #16803C;
+    --green-light: #DCFCE7;
+    --amber: #92400E;
+    --amber-light: #FEF3C7;
+    --red: #991B1B;
+    --red-light: #FEE2E2;
+    --gray-light: #F1EFE8;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --font: 'DM Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; }
+  .screen.active { display: flex; }
+
+  /* ─── AUTH SCREENS ─── */
+  #screen-login, #screen-first-access {
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background: var(--bg);
+  }
+
+  .auth-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: var(--shadow);
+  }
+
+  .auth-mark {
+    width: 40px; height: 40px;
+    background: var(--blue);
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+  }
+  .auth-mark svg { width: 20px; height: 20px; fill: white; }
+
+  .auth-title {
+    font-size: 18px; font-weight: 600;
+    text-align: center; margin-bottom: 4px;
+    color: var(--text);
+  }
+  .auth-sub {
+    font-size: 13px; color: var(--text-muted);
+    text-align: center; margin-bottom: 1.75rem;
+    line-height: 1.5;
+  }
+
+  .field { margin-bottom: 1rem; }
+  .field label {
+    display: block; font-size: 12px; font-weight: 500;
+    color: var(--text-muted); margin-bottom: 5px; letter-spacing: 0.02em;
+  }
+  .field input {
+    width: 100%; padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--font); font-size: 14px;
+    background: var(--surface); color: var(--text);
+    outline: none; transition: border-color 0.15s;
+  }
+  .field input:focus { border-color: var(--blue); }
+  .field input.mono { font-family: var(--mono); letter-spacing: 0.05em; }
+
+  .btn-main {
+    width: 100%; padding: 10px;
+    background: var(--blue); color: white;
+    border: none; border-radius: var(--radius);
+    font-family: var(--font); font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: background 0.15s;
+    margin-top: 4px;
+  }
+  .btn-main:hover { background: var(--blue-dark); }
+
+  .auth-error {
+    font-size: 12px; color: var(--red);
+    background: var(--red-light);
+    border-radius: var(--radius);
+    padding: 8px 12px; margin-top: 10px;
+    text-align: center; display: none;
+  }
+
+  .auth-hint {
+    font-size: 11px; color: var(--text-faint);
+    text-align: center; margin-top: 14px;
+  }
+
+  .strength-bar {
+    height: 3px; border-radius: 2px;
+    background: var(--border); margin-top: 6px; overflow: hidden;
+  }
+  .strength-fill { height: 100%; width: 0; transition: width 0.2s, background 0.2s; }
+  .strength-label { font-size: 11px; color: var(--text-faint); margin-top: 3px; }
+
+  /* ─── APP SHELL ─── */
+  #screen-app {
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .topnav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+    display: flex; align-items: center;
+    height: 52px; gap: 12px;
+  }
+  .topnav-brand {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 600; font-size: 14px; color: var(--text);
+    flex: 1;
+  }
+  .topnav-brand .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--blue);
+  }
+  .nav-role {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.05em;
+    padding: 3px 8px; border-radius: 20px;
+    background: var(--blue-light); color: var(--blue);
+  }
+  .nav-role.admin { background: var(--amber-light); color: var(--amber); }
+  .nav-user {
+    font-size: 13px; color: var(--text-muted);
+    font-family: var(--mono);
+  }
+  .btn-nav {
+    font-size: 12px; color: var(--text-muted);
+    background: none; border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 5px 12px;
+    cursor: pointer; font-family: var(--font);
+    transition: background 0.15s;
+  }
+  .btn-nav:hover { background: var(--gray-light); }
+
+  .main-content { padding: 1.5rem; flex: 1; }
+
+  /* ─── TABS (admin) ─── */
+  .tabs {
+    display: flex; gap: 2px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+  .tab-btn {
+    padding: 8px 16px; font-size: 13px; font-weight: 500;
+    background: none; border: none; border-bottom: 2px solid transparent;
+    color: var(--text-muted); cursor: pointer; font-family: var(--font);
+    transition: color 0.15s; margin-bottom: -1px;
+  }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ─── SHEETS CONFIG ─── */
+  .config-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  .config-title {
+    font-size: 13px; font-weight: 600; color: var(--text);
+    margin-bottom: 4px;
+  }
+  .config-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 1rem; }
+  .input-row { display: flex; gap: 8px; }
+  .input-row input { flex: 1; }
+  .input-row input, .config-card input[type=text] {
+    padding: 8px 12px; border: 1px solid var(--border);
+    border-radius: var(--radius); font-family: var(--font);
+    font-size: 13px; background: var(--surface); color: var(--text);
+    outline: none; width: 100%;
+  }
+  .input-row input:focus, .config-card input[type=text]:focus { border-color: var(--blue); }
+  .btn-sec {
+    padding: 8px 16px; font-size: 13px; font-weight: 500;
+    background: var(--blue); color: white; border: none;
+    border-radius: var(--radius); cursor: pointer;
+    font-family: var(--font); transition: background 0.15s; white-space: nowrap;
+  }
+  .btn-sec:hover { background: var(--blue-dark); }
+  .btn-outline {
+    padding: 7px 14px; font-size: 12px; font-weight: 500;
+    background: none; color: var(--text-muted);
+    border: 1px solid var(--border); border-radius: var(--radius);
+    cursor: pointer; font-family: var(--font); transition: background 0.15s;
+  }
+  .btn-outline:hover { background: var(--gray-light); }
+  .status-msg {
+    font-size: 12px; padding: 7px 12px;
+    border-radius: var(--radius); margin-top: 8px; display: none;
+  }
+  .status-ok { background: var(--green-light); color: var(--green); }
+  .status-err { background: var(--red-light); color: var(--red); }
+
+  /* ─── FILTERS ─── */
+  .filters-bar {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 1rem; align-items: center;
+  }
+  .filters-bar input[type=text], .filters-bar select {
+    padding: 7px 11px; border: 1px solid var(--border);
+    border-radius: var(--radius); font-family: var(--font);
+    font-size: 13px; background: var(--surface); color: var(--text);
+    outline: none;
+  }
+  .filters-bar input[type=text]:focus,
+  .filters-bar select:focus { border-color: var(--blue); }
+  .filters-bar input[type=text] { min-width: 200px; flex: 1; }
+
+  /* ─── TABLE ─── */
+  .table-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); overflow: hidden;
+  }
+  .table-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; flex-wrap: wrap;
+  }
+  .table-meta { font-size: 12px; color: var(--text-muted); }
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  thead th {
+    text-align: left; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase;
+    color: var(--text-faint); padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    background: #FAFAF8; white-space: nowrap;
+  }
+  tbody td {
+    padding: 10px 16px; font-size: 13px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text); overflow: hidden;
+    text-overflow: ellipsis; white-space: nowrap;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #FAFAF8; }
+
+  .badge {
+    display: inline-block; font-size: 11px; font-weight: 500;
+    padding: 2px 8px; border-radius: 20px; white-space: nowrap;
+  }
+  .b-aprov { background: var(--green-light); color: var(--green); }
+  .b-reprov { background: var(--red-light); color: var(--red); }
+  .b-pend { background: var(--amber-light); color: var(--amber); }
+  .b-outro { background: var(--gray-light); color: var(--text-muted); }
+
+  .empty-state {
+    text-align: center; padding: 3rem 1rem;
+    font-size: 13px; color: var(--text-faint);
+  }
+  .empty-state p { margin-top: 6px; font-size: 12px; }
+
+  /* ─── PAGINATION ─── */
+  .pager {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px; border-top: 1px solid var(--border);
+    font-size: 12px; color: var(--text-muted);
+  }
+  .pager-spacer { flex: 1; }
+
+  /* ─── USERS TABLE ─── */
+  .users-table table { table-layout: auto; }
+  .users-table thead th { width: auto; }
+  .btn-reset {
+    font-size: 11px; padding: 3px 10px;
+    background: none; border: 1px solid var(--border);
+    border-radius: var(--radius); cursor: pointer;
+    font-family: var(--font); color: var(--text-muted);
+    transition: all 0.15s;
+  }
+  .btn-reset:hover { background: var(--amber-light); color: var(--amber); border-color: var(--amber); }
+
+  /* ─── LOADING ─── */
+  .loading {
+    text-align: center; padding: 2.5rem 1rem;
+    font-size: 13px; color: var(--text-faint);
+  }
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto 10px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  @media (max-width: 600px) {
+    .main-content { padding: 1rem; }
+    .topnav { padding: 0 1rem; }
+    .auth-box { padding: 2rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     TELA DE LOGIN
+════════════════════════════════════════════ -->
+<div id="screen-login" class="screen active">
+  <div class="auth-box">
+    <div class="auth-mark">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <div class="auth-title">PÉ DE MEIA</div>
+    <div class="auth-sub">Acesse com o código INEP da sua escola ou com a conta administrativa.</div>
+    <div class="field">
+      <label>Usuário (INEP ou "admin")</label>
+      <input type="text" id="login-user" class="mono" placeholder="Ex: 25012345" autocomplete="username" />
+    </div>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password" />
+    </div>
+    <button class="btn-main" onclick="doLogin()">Entrar</button>
+    <div class="auth-error" id="login-err"></div>
+    <div class="auth-hint">Primeiro acesso? Use sua senha padrão (INEP ou matrícula).<br>Você será solicitado a criar uma nova senha.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TELA DE PRIMEIRO ACESSO
+════════════════════════════════════════════ -->
+<div id="screen-first-access" class="screen">
+  <div class="auth-box">
+    <div class="auth-mark">
+      <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+    </div>
+    <div class="auth-title">Crie sua nova senha</div>
+    <div class="auth-sub">Este é seu primeiro acesso. Defina uma senha pessoal para continuar.</div>
+    <div class="field">
+      <label>Nova senha</label>
+      <input type="password" id="new-pass" placeholder="Mínimo 6 caracteres" oninput="checkStrength()" autocomplete="new-password" />
+      <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+      <div class="strength-label" id="strength-label"></div>
+    </div>
+    <div class="field">
+      <label>Confirmar nova senha</label>
+      <input type="password" id="new-pass-confirm" placeholder="Repita a senha" autocomplete="new-password" />
+    </div>
+    <button class="btn-main" onclick="doFirstAccess()">Salvar e entrar</button>
+    <div class="auth-error" id="first-err"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     APP PRINCIPAL
+════════════════════════════════════════════ -->
+<div id="screen-app" class="screen">
+
+  <nav class="topnav">
+    <div class="topnav-brand">
+      <div class="dot"></div>
+      PÉ DE MEIA
+    </div>
+    <span class="nav-role" id="nav-role-badge">Escola</span>
+    <span class="nav-user" id="nav-user-label"></span>
+    <button class="btn-nav" onclick="doLogout()">Sair</button>
+  </nav>
+
+  <div class="main-content">
+
+    <!-- PAINEL ADMIN -->
+    <div id="panel-admin" style="display:none;">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('dados')">Dados</button>
+        <button class="tab-btn" onclick="switchTab('usuarios')">Usuários / Senhas</button>
+        <button class="tab-btn" onclick="switchTab('config')">Configurações</button>
+      </div>
+
+      <!-- TAB: DADOS (admin vê tudo) -->
+      <div class="tab-panel active" id="tab-dados">
+        <div class="filters-bar">
+          <input type="text" id="adm-busca" placeholder="Buscar por nome ou CPF..." oninput="renderAdminTable()" />
+          <select id="adm-inep" onchange="renderAdminTable()"><option value="">Todos os INEPs</option></select>
+          <select id="adm-etapa" onchange="renderAdminTable()"><option value="">Todas as etapas</option></select>
+          <select id="adm-sit" onchange="renderAdminTable()"><option value="">Todas as situações</option></select>
+          <button class="btn-outline" onclick="limparFiltrosAdm()">Limpar</button>
+        </div>
+        <div class="table-card" id="adm-table-card">
+          <div class="loading"><div class="spinner"></div>Aguardando dados do Google Sheets...</div>
+        </div>
+      </div>
+
+      <!-- TAB: USUÁRIOS -->
+      <div class="tab-panel" id="tab-usuarios">
+        <!-- BLOCO: ADMINS -->
+        <div class="config-card">
+          <div class="config-title">Administradores cadastrados</div>
+          <div class="config-sub">Cadastre novos administradores pelo número de matrícula. No primeiro acesso, o usuário usará a própria matrícula como senha e será solicitado a criar uma nova.</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+            <input type="text" id="novo-adm-matricula" class="mono" placeholder="Matrícula" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--mono);font-size:13px;flex:1;min-width:120px;outline:none;" />
+            <input type="text" id="novo-adm-nome" placeholder="Nome (opcional)" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius);font-family:var(--font);font-size:13px;flex:2;min-width:140px;outline:none;" />
+            <button class="btn-sec" onclick="cadastrarAdmin()">Cadastrar admin</button>
+          </div>
+          <div class="status-msg" id="adm-cadastro-msg"></div>
+        </div>
+        <div class="table-card users-table" style="margin-bottom:1.25rem;">
+          <div class="table-header">
+            <span class="table-meta" id="admins-meta">Administradores</span>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr>
+                <th style="width:140px;">Matrícula</th>
+                <th>Nome</th>
+                <th style="width:140px;">Status</th>
+                <th style="width:110px;">Ação</th>
+              </tr></thead>
+              <tbody id="admins-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- BLOCO: ESCOLAS -->
+        <div class="config-card">
+          <div class="config-title">Gerenciar senhas das escolas</div>
+          <div class="config-sub">Redefina a senha de uma escola para o valor padrão (número do INEP). No próximo acesso, ela deverá criar uma nova senha.</div>
+          <div class="input-row" style="max-width:400px;">
+            <input type="text" id="reset-inep" class="mono" placeholder="Código INEP da escola" />
+            <button class="btn-sec" onclick="resetSenha()">Resetar senha</button>
+          </div>
+          <div class="status-msg" id="reset-msg"></div>
+        </div>
+        <div class="table-card users-table" id="users-table-card">
+          <div class="table-header">
+            <span class="table-meta" id="users-meta">Escolas cadastradas</span>
+          </div>
+          <div class="tbl-wrap">
+            <table>
+              <thead><tr>
+                <th style="width:140px;">INEP</th>
+                <th>Escola</th>
+                <th style="width:80px;">Registros</th>
+                <th style="width:120px;">Status</th>
+                <th style="width:110px;">Ação</th>
+              </tr></thead>
+              <tbody id="users-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: CONFIGURAÇÕES -->
+      <div class="tab-panel" id="tab-config">
+        <div class="config-card">
+          <div class="config-title">Fonte de dados — Google Sheets</div>
+          <div class="config-sub">Cole o link de compartilhamento público da sua planilha Google Sheets. Ela deve estar configurada como "Qualquer pessoa com o link pode visualizar".</div>
+          <div style="margin-bottom:10px;">
+            <input type="text" id="sheets-url" placeholder="https://docs.google.com/spreadsheets/d/..." style="width:100%;margin-bottom:8px;" />
+            <div style="display:flex;gap:8px;">
+              <button class="btn-sec" onclick="salvarSheets()">Salvar e carregar dados</button>
+              <button class="btn-outline" onclick="recarregarDados()">Recarregar</button>
+            </div>
+          </div>
+          <div class="status-msg" id="sheets-msg"></div>
+          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+            <div style="font-size:12px;color:var(--text-muted);line-height:1.7;">
+              <strong>Como configurar:</strong><br>
+              1. Abra sua planilha no Google Sheets<br>
+              2. Clique em <em>Compartilhar</em> → <em>Qualquer pessoa com o link</em> → <em>Visualizador</em><br>
+              3. Copie o link e cole acima<br>
+              4. A planilha deve ter as colunas: <span style="font-family:var(--mono);font-size:11px;">GRE, Município, INEP, Escola, Etapa de Ensino, Período (EJA), CPF, Nome, Data de Nascimento, Situação, Data da avaliação, Descrição, Detalhamento</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAINEL ESCOLA -->
+    <div id="panel-escola" style="display:none;">
+      <div class="filters-bar">
+        <input type="text" id="esc-busca" placeholder="Buscar por nome ou CPF..." oninput="renderEscolaTable()" />
+        <select id="esc-etapa" onchange="renderEscolaTable()"><option value="">Todas as etapas</option></select>
+        <select id="esc-sit" onchange="renderEscolaTable()"><option value="">Todas as situações</option></select>
+        <button class="btn-outline" onclick="limparFiltrosEsc()">Limpar</button>
+      </div>
+      <div class="table-card" id="esc-table-card">
+        <div class="loading"><div class="spinner"></div>Carregando dados...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════
+// ESTADO
+// ═══════════════════════════════
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin@2025';
+const STORAGE_KEY = 'avaliacoes_config';
+
+let state = {
+  sheetsUrl: '',
+  usuarios: {},   // { inep: { senha, primeiroAcesso } }
+  admins: {},     // { matricula: { senha, primeiroAcesso, nome } }  — admins cadastrados pelo superadmin
+  dados: [],
+  loggedUser: null,
+  isAdmin: false
+};
+
+let admFiltered = [], escFiltered = [];
+let admPage = 1, escPage = 1;
+const PER = 20;
+
+// ─── PERSIST ───
+function salvarState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    sheetsUrl: state.sheetsUrl,
+    usuarios: state.usuarios,
+    admins: state.admins
+  })); }catch(e){}
+}
+
+function carregarState(){
+  try{
+    const s = JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
+    if(s.sheetsUrl) state.sheetsUrl = s.sheetsUrl;
+    if(s.usuarios)  state.usuarios  = s.usuarios;
+    if(s.admins)    state.admins    = s.admins;
+  }catch(e){}
+}
+
+// ═══════════════════════════════
+// LOGIN
+// ═══════════════════════════════
+function doLogin(){
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const err  = document.getElementById('login-err');
+
+  if(!user){ showErr(err,'Informe o usuário.'); return; }
+  if(!pass){ showErr(err,'Informe a senha.');   return; }
+
+  // Superadmin fixo
+  if(user === ADMIN_USER){
+    if(pass === ADMIN_PASS){
+      state.loggedUser = ADMIN_USER;
+      state.isAdmin = true;
+      entrarApp();
+    } else { showErr(err,'Senha incorreta.'); }
+    return;
+  }
+
+  // Admin cadastrado (matrícula)
+  const adm = state.admins[user];
+  if(adm !== undefined){
+    if(adm.primeiroAcesso){
+      if(pass !== user){ showErr(err,'Senha incorreta. No primeiro acesso use sua matrícula como senha.'); return; }
+      state.loggedUser = user;
+      state.isAdmin = true;
+      irPrimeiroAcesso();
+      return;
+    }
+    if(adm.senha !== pass){ showErr(err,'Senha incorreta.'); return; }
+    state.loggedUser = user;
+    state.isAdmin = true;
+    entrarApp();
+    return;
+  }
+
+  // Escola (INEP)
+  const u = state.usuarios[user];
+  if(!u){
+    if(state.dados.length > 0){
+      const existe = state.dados.some(r => r.inep === user);
+      if(!existe){ showErr(err,'Usuário não encontrado na base de dados.'); return; }
+    }
+    if(pass !== user){ showErr(err,'Senha incorreta. No primeiro acesso use o número do INEP como senha.'); return; }
+    state.loggedUser = user;
+    state.isAdmin = false;
+    irPrimeiroAcesso();
+    return;
+  }
+
+  if(u.primeiroAcesso){
+    if(pass !== user){ showErr(err,'Senha incorreta.'); return; }
+    state.loggedUser = user;
+    state.isAdmin = false;
+    irPrimeiroAcesso();
+    return;
+  }
+
+  if(u.senha !== pass){ showErr(err,'Senha incorreta.'); return; }
+  state.loggedUser = user;
+  state.isAdmin = false;
+  entrarApp();
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    if(isScreenActive('screen-login'))        doLogin();
+    if(isScreenActive('screen-first-access')) doFirstAccess();
+  }
+});
+
+function isScreenActive(id){
+  return document.getElementById(id).classList.contains('active');
+}
+
+// ─── PRIMEIRO ACESSO ───
+function irPrimeiroAcesso(){
+  showScreen('screen-first-access');
+  document.getElementById('new-pass').value='';
+  document.getElementById('new-pass-confirm').value='';
+  document.getElementById('first-err').style.display='none';
+}
+
+function doFirstAccess(){
+  const np  = document.getElementById('new-pass').value;
+  const np2 = document.getElementById('new-pass-confirm').value;
+  const err = document.getElementById('first-err');
+
+  if(np.length < 6){ showErr(err,'A senha deve ter pelo menos 6 caracteres.'); return; }
+  if(np !== np2)   { showErr(err,'As senhas não coincidem.'); return; }
+
+  // Se é admin cadastrado
+  if(state.admins[state.loggedUser] !== undefined){
+    state.admins[state.loggedUser] = { ...state.admins[state.loggedUser], senha: np, primeiroAcesso: false };
+  } else {
+    state.usuarios[state.loggedUser] = { senha: np, primeiroAcesso: false };
+  }
+  salvarState();
+  entrarApp();
+}
+
+function checkStrength(){
+  const v = document.getElementById('new-pass').value;
+  const fill  = document.getElementById('strength-fill');
+  const label = document.getElementById('strength-label');
+  let score = 0;
+  if(v.length >= 6) score++;
+  if(v.length >= 10) score++;
+  if(/[A-Z]/.test(v)) score++;
+  if(/[0-9]/.test(v)) score++;
+  if(/[^A-Za-z0-9]/.test(v)) score++;
+  const pct = [0,25,45,65,85,100][score];
+  const colors = ['#E24B4A','#E24B4A','#EF9F27','#EF9F27','#16803C','#16803C'];
+  const labels = ['','Fraca','Razoável','Moderada','Forte','Muito forte'];
+  fill.style.width = pct+'%';
+  fill.style.background = colors[score]||'#E24B4A';
+  label.textContent = labels[score]||'';
+  label.style.color = colors[score]||'#E24B4A';
+}
+
+// ═══════════════════════════════
+// APP
+// ═══════════════════════════════
+function entrarApp(){
+  showScreen('screen-app');
+  document.getElementById('nav-user-label').textContent = state.loggedUser;
+
+  if(state.isAdmin){
+    document.getElementById('nav-role-badge').textContent = 'Admin';
+    document.getElementById('nav-role-badge').classList.add('admin');
+    const admLabel = state.admins[state.loggedUser];
+    document.getElementById('nav-user-label').textContent = admLabel && admLabel.nome ? admLabel.nome+' ('+state.loggedUser+')' : state.loggedUser;
+    document.getElementById('panel-admin').style.display = 'block';
+    document.getElementById('panel-escola').style.display = 'none';
+    // Preenche URL salva
+    if(state.sheetsUrl) document.getElementById('sheets-url').value = state.sheetsUrl;
+    if(state.dados.length) { populaFiltrosAdm(); renderAdminTable(); renderUsersTable(); renderAdminsTable(); }
+    else if(state.sheetsUrl) carregarDadosSheets(state.sheetsUrl);
+    else { renderAdminTableVazio(); renderAdminsTable(); }
+  } else {
+    document.getElementById('nav-role-badge').textContent = 'Escola';
+    document.getElementById('nav-role-badge').classList.remove('admin');
+    document.getElementById('panel-admin').style.display = 'none';
+    document.getElementById('panel-escola').style.display = 'block';
+    if(state.dados.length) { populaFiltrosEsc(); renderEscolaTable(); }
+    else if(state.sheetsUrl) carregarDadosSheets(state.sheetsUrl, true);
+    else renderEscolaTableVazio();
+  }
+}
+
+function doLogout(){
+  state.loggedUser = null;
+  state.isAdmin = false;
+  document.getElementById('login-user').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('login-err').style.display='none';
+  showScreen('screen-login');
+}
+
+// ═══════════════════════════════
+// GOOGLE SHEETS
+// ═══════════════════════════════
+function extrairSheetId(url){
+  const m = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  return m ? m[1] : null;
+}
+
+function salvarSheets(){
+  const url = document.getElementById('sheets-url').value.trim();
+  const msg = document.getElementById('sheets-msg');
+  if(!url){ showStatusMsg(msg,'Cole o link do Google Sheets.','err'); return; }
+  const id = extrairSheetId(url);
+  if(!id){ showStatusMsg(msg,'Link inválido. Certifique-se de usar o link de compartilhamento do Google Sheets.','err'); return; }
+  state.sheetsUrl = url;
+  salvarState();
+  carregarDadosSheets(url);
+}
+
+function recarregarDados(){
+  if(!state.sheetsUrl){ showStatusMsg(document.getElementById('sheets-msg'),'Nenhum link configurado.','err'); return; }
+  carregarDadosSheets(state.sheetsUrl);
+}
+
+function csvUrl(url){
+  const id = extrairSheetId(url);
+  return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&id=${id}`;
+}
+
+function carregarDadosSheets(url, isEscolaLogin){
+  const msg = document.getElementById('sheets-msg');
+  const loadingHtml = '<div class="loading"><div class="spinner"></div>Carregando dados do Google Sheets...</div>';
+  if(state.isAdmin) document.getElementById('adm-table-card').innerHTML = loadingHtml;
+  else document.getElementById('esc-table-card').innerHTML = loadingHtml;
+
+  const exportUrl = csvUrl(url);
+  fetch(exportUrl)
+    .then(r=>{ if(!r.ok) throw new Error('Erro HTTP '+r.status); return r.text(); })
+    .then(csv=>{
+      const rows = parseCSV(csv);
+      if(!rows.length){ throw new Error('Planilha vazia ou sem dados.'); }
+      state.dados = rows;
+      // Registra usuários automaticamente com base nos INEPs
+      rows.forEach(r=>{ if(r.inep && !state.usuarios[r.inep]){ state.usuarios[r.inep]={ senha:r.inep, primeiroAcesso:true }; } });
+      salvarState();
+      if(msg) showStatusMsg(msg, rows.length+' registros carregados com sucesso.','ok');
+      if(state.isAdmin){ populaFiltrosAdm(); renderAdminTable(); renderUsersTable(); renderAdminsTable(); }
+      else { populaFiltrosEsc(); renderEscolaTable(); }
+    })
+    .catch(e=>{
+      const errMsg = 'Não foi possível carregar os dados. Verifique se a planilha está pública e o link está correto. ('+e.message+')';
+      if(msg) showStatusMsg(msg, errMsg,'err');
+      if(state.isAdmin) renderAdminTableVazio(errMsg);
+      else renderEscolaTableVazio(errMsg);
+    });
+}
+
+// ─── CSV PARSER ───
+function parseCSV(csv){
+  const lines = csv.split('\n');
+  if(lines.length < 2) return [];
+  const headers = splitCSVLine(lines[0]).map(h=>h.trim().replace(/^"|"$/g,''));
+
+  function findCol(candidates){
+    for(const c of candidates){
+      const i = headers.findIndex(h=>h.toLowerCase().replace(/[^a-záéíóúãõâêôçü0-9]/gi,'').includes(c.toLowerCase().replace(/[^a-záéíóúãõâêôçü0-9]/gi,'')));
+      if(i>=0) return i;
+    }
+    return -1;
+  }
+
+  const ci = {
+    inep:  findCol(['INEP','inep']),
+    cpf:   findCol(['CPF','cpf']),
+    nome:  findCol(['Nome','nome']),
+    nasc:  findCol(['DatadeNascimento','DataNasc','nascimento']),
+    etapa: findCol(['EtapadeEnsino','Etapa','etapa']),
+    sit:   findCol(['Situação','Situacao','situacao','situação']),
+    det:   findCol(['Detalhamento','detalhamento']),
+    escola:findCol(['Escola','escola']),
+    gre:   findCol(['GRE','gre']),
+    mun:   findCol(['Município','Municipio','municipio'])
+  };
+
+  const result = [];
+  for(let i=1;i<lines.length;i++){
+    const line = lines[i].trim();
+    if(!line) continue;
+    const cols = splitCSVLine(line).map(c=>c.trim().replace(/^"|"$/g,''));
+    const g = idx => idx>=0 ? (cols[idx]||'') : '';
+    const row = {
+      inep:   g(ci.inep),
+      cpf:    g(ci.cpf),
+      nome:   g(ci.nome),
+      nasc:   g(ci.nasc),
+      etapa:  g(ci.etapa),
+      sit:    g(ci.sit),
+      det:    g(ci.det),
+      escola: g(ci.escola),
+      gre:    g(ci.gre),
+      mun:    g(ci.mun)
+    };
+    if(row.nome || row.cpf) result.push(row);
+  }
+  return result;
+}
+
+function splitCSVLine(line){
+  const result = []; let cur = ''; let inQ = false;
+  for(let i=0;i<line.length;i++){
+    const c = line[i];
+    if(c==='"'){ inQ=!inQ; }
+    else if(c===',' && !inQ){ result.push(cur); cur=''; }
+    else { cur+=c; }
+  }
+  result.push(cur);
+  return result;
+}
+
+// ═══════════════════════════════
+// TABELA ADMIN
+// ═══════════════════════════════
+function populaFiltrosAdm(){
+  const ineps  = [...new Set(state.dados.map(d=>d.inep).filter(Boolean))].sort();
+  const etapas = [...new Set(state.dados.map(d=>d.etapa).filter(Boolean))].sort();
+  const sits   = [...new Set(state.dados.map(d=>d.sit).filter(Boolean))].sort();
+  setOpts('adm-inep',  ineps,  'Todos os INEPs');
+  setOpts('adm-etapa', etapas, 'Todas as etapas');
+  setOpts('adm-sit',   sits,   'Todas as situações');
+}
+
+function renderAdminTable(){
+  const busca = document.getElementById('adm-busca').value.toLowerCase();
+  const inep  = document.getElementById('adm-inep').value;
+  const etapa = document.getElementById('adm-etapa').value;
+  const sit   = document.getElementById('adm-sit').value;
+  admFiltered = state.dados.filter(d=>{
+    const mb = !busca || d.nome.toLowerCase().includes(busca) || d.cpf.toLowerCase().includes(busca);
+    const mi = !inep  || d.inep  === inep;
+    const me = !etapa || d.etapa === etapa;
+    const ms = !sit   || d.sit   === sit;
+    return mb&&mi&&me&&ms;
+  });
+  admPage = 1;
+  buildAdminTable();
+}
+
+function buildAdminTable(){
+  const total = admFiltered.length;
+  const totalP = Math.max(1,Math.ceil(total/PER));
+  if(admPage>totalP) admPage=totalP;
+  const slice = admFiltered.slice((admPage-1)*PER, admPage*PER);
+  const card = document.getElementById('adm-table-card');
+  card.innerHTML = `
+    <div class="table-header">
+      <span class="table-meta">${total} registro(s) encontrado(s) — total na base: ${state.dados.length}</span>
+    </div>
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th style="width:110px;">INEP</th>
+        <th style="width:115px;">CPF</th>
+        <th style="width:190px;">Nome</th>
+        <th style="width:110px;">Dt. nasc.</th>
+        <th style="width:140px;">Etapa</th>
+        <th style="width:100px;">Situação</th>
+        <th>Detalhamento</th>
+      </tr></thead>
+      <tbody>${slice.length ? slice.map(rowHtmlAdm).join('') : '<tr><td colspan="7" class="empty-state">Nenhum registro encontrado.</td></tr>'}</tbody>
+    </table>
+    </div>
+    <div class="pager">
+      <button class="btn-outline" onclick="changePageAdm(-1)">← Anterior</button>
+      <span class="pager-spacer" style="text-align:center;">Página ${admPage} de ${totalP}</span>
+      <button class="btn-outline" onclick="changePageAdm(1)">Próxima →</button>
+    </div>`;
+}
+
+function rowHtmlAdm(d){
+  return `<tr>
+    <td style="font-family:var(--mono);font-size:12px;" title="${d.inep}">${d.inep||'—'}</td>
+    <td style="font-family:var(--mono);font-size:12px;" title="${d.cpf}">${d.cpf||'—'}</td>
+    <td title="${d.nome}">${d.nome||'—'}</td>
+    <td>${d.nasc||'—'}</td>
+    <td title="${d.etapa}">${d.etapa||'—'}</td>
+    <td><span class="badge ${badgeCls(d.sit)}">${d.sit||'—'}</span></td>
+    <td title="${d.det}">${d.det||'—'}</td>
+  </tr>`;
+}
+
+function renderAdminTableVazio(msg){
+  document.getElementById('adm-table-card').innerHTML = `<div class="empty-state">Nenhum dado carregado.<p>${msg||'Configure a fonte de dados na aba Configurações.'}</p></div>`;
+}
+
+function changePageAdm(dir){
+  const totalP = Math.max(1,Math.ceil(admFiltered.length/PER));
+  admPage = Math.min(totalP, Math.max(1, admPage+dir));
+  buildAdminTable();
+}
+
+function limparFiltrosAdm(){
+  document.getElementById('adm-busca').value='';
+  document.getElementById('adm-inep').value='';
+  document.getElementById('adm-etapa').value='';
+  document.getElementById('adm-sit').value='';
+  renderAdminTable();
+}
+
+// ═══════════════════════════════
+// TABELA ESCOLA
+// ═══════════════════════════════
+function populaFiltrosEsc(){
+  const meusDados = state.dados.filter(d=>d.inep===state.loggedUser);
+  const etapas = [...new Set(meusDados.map(d=>d.etapa).filter(Boolean))].sort();
+  const sits   = [...new Set(meusDados.map(d=>d.sit).filter(Boolean))].sort();
+  setOpts('esc-etapa', etapas, 'Todas as etapas');
+  setOpts('esc-sit',   sits,   'Todas as situações');
+}
+
+function renderEscolaTable(){
+  const meusDados = state.dados.filter(d=>d.inep===state.loggedUser);
+  const busca = document.getElementById('esc-busca').value.toLowerCase();
+  const etapa = document.getElementById('esc-etapa').value;
+  const sit   = document.getElementById('esc-sit').value;
+  escFiltered = meusDados.filter(d=>{
+    const mb = !busca || d.nome.toLowerCase().includes(busca) || d.cpf.toLowerCase().includes(busca);
+    const me = !etapa || d.etapa===etapa;
+    const ms = !sit   || d.sit===sit;
+    return mb&&me&&ms;
+  });
+  escPage=1;
+  buildEscolaTable();
+}
+
+function buildEscolaTable(){
+  const total = escFiltered.length;
+  const totalP = Math.max(1,Math.ceil(total/PER));
+  if(escPage>totalP) escPage=totalP;
+  const slice = escFiltered.slice((escPage-1)*PER, escPage*PER);
+  const escola = state.dados.find(d=>d.inep===state.loggedUser);
+  const nomeEscola = escola ? escola.escola : 'INEP '+state.loggedUser;
+  const card = document.getElementById('esc-table-card');
+  card.innerHTML = `
+    <div class="table-header">
+      <div>
+        <span style="font-size:14px;font-weight:500;">${nomeEscola}</span>
+        <span class="table-meta" style="margin-left:8px;">${total} registro(s)</span>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+    <table>
+      <thead><tr>
+        <th style="width:120px;">CPF</th>
+        <th style="width:200px;">Nome</th>
+        <th style="width:115px;">Dt. nasc.</th>
+        <th style="width:150px;">Etapa de ensino</th>
+        <th style="width:105px;">Situação</th>
+        <th>Detalhamento</th>
+      </tr></thead>
+      <tbody>${slice.length ? slice.map(rowHtmlEsc).join('') : '<tr><td colspan="6" class="empty-state">Nenhum registro encontrado.</td></tr>'}</tbody>
+    </table>
+    </div>
+    <div class="pager">
+      <button class="btn-outline" onclick="changePageEsc(-1)">← Anterior</button>
+      <span class="pager-spacer" style="text-align:center;">Página ${escPage} de ${totalP}</span>
+      <button class="btn-outline" onclick="changePageEsc(1)">Próxima →</button>
+    </div>`;
+}
+
+function rowHtmlEsc(d){
+  return `<tr>
+    <td style="font-family:var(--mono);font-size:12px;" title="${d.cpf}">${d.cpf||'—'}</td>
+    <td title="${d.nome}">${d.nome||'—'}</td>
+    <td>${d.nasc||'—'}</td>
+    <td title="${d.etapa}">${d.etapa||'—'}</td>
+    <td><span class="badge ${badgeCls(d.sit)}">${d.sit||'—'}</span></td>
+    <td title="${d.det}">${d.det||'—'}</td>
+  </tr>`;
+}
+
+function renderEscolaTableVazio(msg){
+  document.getElementById('esc-table-card').innerHTML = `<div class="empty-state">Nenhum dado disponível.<p>${msg||'Entre em contato com o administrador.'}</p></div>`;
+}
+
+function changePageEsc(dir){
+  const totalP = Math.max(1,Math.ceil(escFiltered.length/PER));
+  escPage = Math.min(totalP, Math.max(1, escPage+dir));
+  buildEscolaTable();
+}
+
+function limparFiltrosEsc(){
+  document.getElementById('esc-busca').value='';
+  document.getElementById('esc-etapa').value='';
+  document.getElementById('esc-sit').value='';
+  renderEscolaTable();
+}
+
+// ═══════════════════════════════
+// GERENCIAR ADMINS
+// ═══════════════════════════════
+function cadastrarAdmin(){
+  const mat = document.getElementById('novo-adm-matricula').value.trim();
+  const nome = document.getElementById('novo-adm-nome').value.trim();
+  const msg = document.getElementById('adm-cadastro-msg');
+  if(!mat){ showStatusMsg(msg,'Informe a matrícula.','err'); return; }
+  if(mat === ADMIN_USER){ showStatusMsg(msg,'Esta matrícula é reservada.','err'); return; }
+  if(state.admins[mat]){ showStatusMsg(msg,'Matrícula já cadastrada.','err'); return; }
+  state.admins[mat] = { senha: mat, primeiroAcesso: true, nome: nome };
+  salvarState();
+  document.getElementById('novo-adm-matricula').value='';
+  document.getElementById('novo-adm-nome').value='';
+  renderAdminsTable();
+  showStatusMsg(msg,'Admin "'+mat+'" cadastrado. Senha inicial: matrícula.','ok');
+}
+
+function resetSenhaAdmin(mat){
+  state.admins[mat] = { ...state.admins[mat], senha: mat, primeiroAcesso: true };
+  salvarState();
+  renderAdminsTable();
+}
+
+function removerAdmin(mat){
+  if(!confirm('Remover o administrador "'+mat+'"?')) return;
+  delete state.admins[mat];
+  salvarState();
+  renderAdminsTable();
+}
+
+function renderAdminsTable(){
+  const tbody = document.getElementById('admins-tbody');
+  const mats = Object.keys(state.admins).sort();
+  document.getElementById('admins-meta').textContent = mats.length+' administrador(es) cadastrado(s)';
+  tbody.innerHTML = mats.map(mat=>{
+    const a = state.admins[mat];
+    const status = a.primeiroAcesso ? 'Aguardando 1º acesso' : 'Ativo';
+    const cls = a.primeiroAcesso ? 'b-pend' : 'b-aprov';
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:12px;">${mat}</td>
+      <td>${a.nome||'—'}</td>
+      <td><span class="badge ${cls}">${status}</span></td>
+      <td style="display:flex;gap:6px;">
+        <button class="btn-reset" onclick="resetSenhaAdmin('${mat}')">Resetar</button>
+        <button class="btn-reset" style="color:var(--red);" onclick="removerAdmin('${mat}')">Remover</button>
+      </td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="4" class="empty-state">Nenhum admin cadastrado.</td></tr>';
+}
+
+// ═══════════════════════════════
+// TABELA USUÁRIOS (escolas)
+// ═══════════════════════════════
+function renderUsersTable(){
+  const ineps = [...new Set(state.dados.map(d=>d.inep).filter(Boolean))].sort();
+  const tbody = document.getElementById('users-tbody');
+  document.getElementById('users-meta').textContent = ineps.length+' escola(s) na base';
+  tbody.innerHTML = ineps.map(inep=>{
+    const u = state.usuarios[inep];
+    const escola = state.dados.find(d=>d.inep===inep);
+    const qtd = state.dados.filter(d=>d.inep===inep).length;
+    const status = !u ? 'Nunca acessou' : u.primeiroAcesso ? 'Aguardando primeiro acesso' : 'Senha definida';
+    const statusCls = !u ? 'b-outro' : u.primeiroAcesso ? 'b-pend' : 'b-aprov';
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:12px;">${inep}</td>
+      <td title="${escola?escola.escola:''}">${escola?escola.escola:'—'}</td>
+      <td style="text-align:center;">${qtd}</td>
+      <td><span class="badge ${statusCls}">${status}</span></td>
+      <td><button class="btn-reset" onclick="resetSenhaInep('${inep}')">Resetar senha</button></td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="5" class="empty-state">Nenhuma escola carregada.</td></tr>';
+}
+
+function resetSenha(){
+  const inep = document.getElementById('reset-inep').value.trim();
+  resetSenhaInep(inep);
+}
+
+function resetSenhaInep(inep){
+  const msg = document.getElementById('reset-msg');
+  if(!inep){ showStatusMsg(msg,'Informe o INEP.','err'); return; }
+  const existe = state.dados.some(d=>d.inep===inep);
+  if(!existe){ showStatusMsg(msg,'INEP não encontrado na base.','err'); return; }
+  state.usuarios[inep] = { senha: inep, primeiroAcesso: true };
+  salvarState();
+  renderUsersTable();
+  document.getElementById('reset-inep').value='';
+  showStatusMsg(msg,'Senha da escola '+inep+' resetada. No próximo acesso será solicitada nova senha.','ok');
+}
+
+// ═══════════════════════════════
+// UTILITÁRIOS
+// ═══════════════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showErr(el, msg){ el.textContent=msg; el.style.display='block'; }
+
+function showStatusMsg(el, msg, type){
+  el.textContent = msg;
+  el.className = 'status-msg '+(type==='ok'?'status-ok':'status-err');
+  el.style.display='block';
+  setTimeout(()=>{ el.style.display='none'; }, 5000);
+}
+
+function setOpts(id, values, placeholder){
+  const sel = document.getElementById(id);
+  sel.innerHTML = `<option value="">${placeholder}</option>` + values.map(v=>`<option>${v}</option>`).join('');
+}
+
+function badgeCls(s){
+  const v=(s||'').toLowerCase();
+  if(v.includes('aprov')) return 'b-aprov';
+  if(v.includes('reprov')||v.includes('retid')) return 'b-reprov';
+  if(v.includes('pend')||v.includes('transf')) return 'b-pend';
+  return 'b-outro';
+}
+
+function switchTab(name){
+  const names = ['dados','usuarios','config'];
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active', names[i]===name);
+  });
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='usuarios') renderAdminsTable();
+}
+
+// ─── INIT ───
+carregarState();
+</script>
+</body>
+</html>
