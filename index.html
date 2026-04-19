@@ -20,7 +20,7 @@
   --sh:0 1px 4px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;min-height:100%;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;}
+html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;}
 
 .screen{display:none;}
 .screen.active{display:flex;}
@@ -475,9 +475,10 @@ window.checkStrength=function(){
 /* ─── ENTRAR APP ─── */
 async function entrarApp(){
   showScreen('screen-app');
-  const u=await fbUser(st.loggedUser);
+  // Busca dados do usuário e planilhas em paralelo
+  const [u, planilhas] = await Promise.all([fbUser(st.loggedUser), fbAllSheets()]);
   document.getElementById('nav-user-label').textContent=u&&u.nome?u.nome+' ('+st.loggedUser+')':st.loggedUser;
-  st.planilhas=await fbAllSheets();
+  st.planilhas=planilhas;
 
   if(st.isAdmin){
     document.getElementById('nav-role-badge').textContent='Admin';
@@ -485,9 +486,8 @@ async function entrarApp(){
     document.getElementById('panel-admin').style.display='block';
     document.getElementById('panel-escola').style.display='none';
     preencherSeletor(true);
-    await renderAdminsCards();
-    await renderUsersCards();
-    await renderSheetsList();
+    // Dispara em paralelo sem bloquear
+    Promise.all([renderAdminsCards(), renderUsersCards(), renderSheetsList()]);
   } else {
     document.getElementById('nav-role-badge').textContent='Escola';
     document.getElementById('nav-role-badge').classList.remove('admin');
@@ -550,17 +550,34 @@ async function carregarSheets(url){
     const rows=parseCSV(await r.text());
     if(!rows.length) throw new Error('Planilha vazia ou sem dados reconhecidos.');
     st.dados=rows;
-    // Registra INEPs novos no Firestore
-    for(const row of rows){
-      if(row.inep){ const ex=await fbUser(row.inep); if(!ex) await fbSetUser(row.inep,{senha:row.inep,primeiroAcesso:true,role:'escola',nome:''}); }
-    }
-    if(st.isAdmin){ populaFiltrosAdm(); renderAdmCards(); await renderUsersCards(); }
+
+    // Renderiza imediatamente — não espera o Firestore
+    if(st.isAdmin){ populaFiltrosAdm(); renderAdmCards(); renderUsersCards(); }
     else { populaFiltrosEsc(); renderEscCards(); }
+
+    // Registra INEPs novos em paralelo, em segundo plano
+    registrarInepsBackground(rows);
+
   }catch(e){
     const msg='Erro ao carregar: '+e.message;
     if(st.isAdmin) document.getElementById('adm-cards-area').innerHTML=`<div class="empty-box">${msg}<p>Verifique se a planilha está pública.</p></div>`;
     else document.getElementById('esc-cards-area').innerHTML=`<div class="empty-box">${msg}</div>`;
   }
+}
+
+/* Registra INEPs novos sem bloquear a UI:
+   1) Busca todos os usuários de uma vez (1 leitura)
+   2) Grava só os que ainda não existem, em paralelo */
+async function registrarInepsBackground(rows){
+  try{
+    const todos = await fbAllUsers();
+    const inepsUnicos = [...new Set(rows.map(r=>r.inep).filter(Boolean))];
+    const novos = inepsUnicos.filter(inep => !todos[inep]);
+    if(!novos.length) return;
+    await Promise.all(novos.map(inep =>
+      fbSetUser(inep,{senha:inep,primeiroAcesso:true,role:'escola',nome:''})
+    ));
+  }catch(e){ console.warn('registrarInepsBackground erro:',e); }
 }
 
 /* ─── GESTÃO DE PLANILHAS ─── */
@@ -854,8 +871,8 @@ window.switchTab=async function(name){
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',names[i]===name));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if(name==='usuarios'){await renderAdminsCards();await renderUsersCards();}
-  if(name==='planilhas'){await renderSheetsList();}
+  if(name==='usuarios') Promise.all([renderAdminsCards(), renderUsersCards()]);
+  if(name==='planilhas') renderSheetsList();
 };
 
 /* ─── CSV ─── */
