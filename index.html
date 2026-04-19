@@ -922,7 +922,7 @@ function isActive(id){return document.getElementById(id).classList.contains('act
 function showErr(el,msg){el.textContent=msg;el.style.display='block';}
 function showStatusMsg(el,msg,type){el.textContent=msg;el.className='status-msg '+(type==='ok'?'status-ok':'status-err');el.style.display='block';setTimeout(()=>{el.style.display='none';},5000);}
 function setOpts(id,values,ph){document.getElementById(id).innerHTML=`<option value="">${ph}</option>`+values.map(v=>`<option>${v}</option>`).join('');}
-function badgeCls(s){const v=(s||'').toLowerCase();if(v.includes('aprov'))return'b-aprov';if(v.includes('reprov')||v.includes('retid'))return'b-reprov';if(v.includes('pend')||v.includes('transf'))return'b-pend';return'b-outro';}
+function badgeCls(s){const v=(s||'').toLowerCase();if(v.includes('elegív')&&!v.includes('não')&&!v.includes('nao'))return'b-aprov';if(v.includes('não elegív')||v.includes('nao elegív'))return'b-pend';if(v.includes('aprov'))return'b-aprov';if(v.includes('reprov')||v.includes('retid'))return'b-reprov';if(v.includes('pend')||v.includes('transf'))return'b-pend';return'b-outro';}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 </script>
