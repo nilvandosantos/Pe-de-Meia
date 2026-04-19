@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Pé de Meia</title>
+<title>Avaliações Escolares — SEDUC</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 :root{
@@ -37,9 +37,10 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
 .field label{display:block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
 .field input,.finput{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:var(--r);font-family:var(--font);font-size:14px;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s;}
 .field input:focus,.finput:focus{border-color:var(--blue);}
-.mono{font-family:var(--mono);letter-spacing:.05em;}
+.mono{font-family:var(--mono);letter-spacing:.04em;}
 .btn-main{width:100%;padding:11px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;margin-top:4px;}
 .btn-main:hover{background:var(--blue-dk);}
+.btn-main:disabled{background:var(--border2);cursor:not-allowed;}
 .auth-error{font-size:12px;color:var(--red);background:var(--red-lt);border-radius:var(--r);padding:8px 12px;margin-top:10px;text-align:center;display:none;}
 .auth-hint{font-size:11px;color:var(--faint);text-align:center;margin-top:14px;line-height:1.6;}
 .strength-bar{height:3px;border-radius:2px;background:var(--border);margin-top:6px;overflow:hidden;}
@@ -53,9 +54,19 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
 .brand-txt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .nav-badge{font-size:11px;font-weight:600;letter-spacing:.04em;padding:3px 9px;border-radius:20px;white-space:nowrap;background:var(--blue-lt);color:var(--blue);}
 .nav-badge.admin{background:var(--amber-lt);color:var(--amber);}
-.nav-user{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;}
+.nav-user{font-size:12px;color:var(--muted);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:130px;}
+.fb-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--faint);flex-shrink:0;}
+.fb-dot{width:6px;height:6px;border-radius:50%;background:var(--border2);}
+.fb-dot.online{background:var(--green);}
+.fb-dot.syncing{background:var(--amber);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 .btn-nav{font-size:12px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:var(--r);padding:5px 12px;cursor:pointer;font-family:var(--font);white-space:nowrap;transition:background .15s;flex-shrink:0;}
 .btn-nav:hover{background:var(--gray-lt);}
+
+/* PLANILHA SELECTOR (topnav) */
+.sheet-selector{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.sheet-selector select{padding:5px 8px;border:1px solid var(--border);border-radius:var(--r);font-family:var(--font);font-size:12px;background:var(--surface);color:var(--text);outline:none;max-width:180px;}
+.sheet-selector select:focus{border-color:var(--blue);}
 
 /* MAIN */
 .main-content{padding:1.25rem;flex:1;width:100%;max-width:1400px;margin:0 auto;}
@@ -105,7 +116,7 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
 .pager{display:flex;align-items:center;gap:8px;margin-top:.75rem;font-size:12px;color:var(--muted);flex-wrap:wrap;}
 .pager-info{flex:1;text-align:center;}
 
-/* CONFIG */
+/* CONFIG / PLANILHAS */
 .config-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1.25rem;margin-bottom:1.25rem;}
 .config-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;}
 .config-sub{font-size:12px;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
@@ -113,11 +124,25 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
 .input-row input{flex:1;min-width:120px;}
 .btn-sec{padding:9px 16px;font-size:13px;font-weight:500;background:var(--blue);color:#fff;border:none;border-radius:var(--r);cursor:pointer;font-family:var(--font);transition:background .15s;white-space:nowrap;flex-shrink:0;}
 .btn-sec:hover{background:var(--blue-dk);}
+.btn-sec:disabled{background:var(--border2);cursor:not-allowed;}
 .btn-outline{padding:7px 14px;font-size:12px;font-weight:500;background:none;color:var(--muted);border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-family:var(--font);transition:background .15s;white-space:nowrap;}
 .btn-outline:hover{background:var(--gray-lt);}
 .status-msg{font-size:12px;padding:7px 12px;border-radius:var(--r);margin-top:8px;display:none;}
 .status-ok{background:var(--green-lt);color:var(--green);}
 .status-err{background:var(--red-lt);color:var(--red);}
+
+/* SHEET CARDS */
+.sheet-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin-bottom:1.25rem;}
+.sheet-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:1rem;display:flex;flex-direction:column;gap:10px;}
+.sheet-card.editing{border-color:var(--blue);}
+.sc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+.sc-name{font-size:14px;font-weight:600;color:var(--text);}
+.sc-url{font-size:11px;color:var(--faint);font-family:var(--mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px;}
+.sc-actions{display:flex;gap:6px;flex-wrap:wrap;}
+.sc-edit-fields{display:flex;flex-direction:column;gap:6px;}
+.sc-edit-fields input{padding:7px 10px;border:1px solid var(--border);border-radius:var(--r);font-family:var(--font);font-size:13px;background:var(--surface);color:var(--text);outline:none;width:100%;}
+.sc-edit-fields input:focus{border-color:var(--blue);}
+.sc-edit-btns{display:flex;gap:6px;}
 
 /* USER CARDS */
 .user-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;margin-bottom:1.5rem;}
@@ -129,6 +154,8 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
 .btn-sm{font-size:11px;padding:4px 10px;background:none;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;font-family:var(--font);color:var(--muted);transition:all .15s;}
 .btn-sm:hover{background:var(--amber-lt);color:var(--amber);border-color:var(--amber);}
 .btn-sm.danger:hover{background:var(--red-lt);color:var(--red);border-color:var(--red);}
+.btn-sm.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+.btn-sm.primary:hover{background:var(--blue-dk);border-color:var(--blue-dk);}
 
 /* EMPTY/LOADING */
 .empty-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:3rem 1rem;text-align:center;font-size:13px;color:var(--faint);}
@@ -137,15 +164,21 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
 .spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px;}
 @keyframes spin{to{transform:rotate(360deg);}}
 
+/* PLANILHA ATIVA BANNER */
+.sheet-banner{background:var(--blue-lt);border:1px solid #C7D7F8;border-radius:var(--rl);padding:.75rem 1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.sb-label{font-size:12px;color:var(--blue-dk);}
+.sb-name{font-size:13px;font-weight:600;color:var(--blue-dk);}
+
 /* RESPONSIVE */
 @media(max-width:480px){
   .main-content{padding:.875rem;}
-  .topnav{padding:0 .875rem;}
+  .topnav{padding:0 .875rem;flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px;gap:6px;}
   .auth-box{padding:2rem 1.25rem;}
-  .cards-grid{grid-template-columns:1fr;}
+  .cards-grid,.sheet-cards{grid-template-columns:1fr;}
   .user-cards{grid-template-columns:1fr;}
   .nav-user{display:none;}
   .ac-fields{grid-template-columns:1fr;}
+  .sheet-selector select{max-width:130px;}
 }
 </style>
 </head>
@@ -155,7 +188,7 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
 <div id="screen-login" class="screen active">
   <div class="auth-box">
     <div class="auth-mark"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg></div>
-    <div class="auth-title">Pé de Meia</div>
+    <div class="auth-title">Avaliações Escolares</div>
     <div class="auth-sub">Acesse com o código INEP, matrícula de administrador ou conta admin.</div>
     <div class="field">
       <label>Usuário</label>
@@ -165,7 +198,7 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
       <label>Senha</label>
       <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password"/>
     </div>
-    <button class="btn-main" onclick="doLogin()">Entrar</button>
+    <button class="btn-main" id="btn-login" onclick="doLogin()">Entrar</button>
     <div class="auth-error" id="login-err"></div>
     <div class="auth-hint">Primeiro acesso? Use o INEP ou a matrícula como senha.<br>Você será solicitado a criar uma nova senha.</div>
   </div>
@@ -187,7 +220,7 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
       <label>Confirmar senha</label>
       <input type="password" id="new-pass-confirm" placeholder="Repita a senha" autocomplete="new-password"/>
     </div>
-    <button class="btn-main" onclick="doFirstAccess()">Salvar e entrar</button>
+    <button class="btn-main" id="btn-first" onclick="doFirstAccess()">Salvar e entrar</button>
     <div class="auth-error" id="first-err"></div>
   </div>
 </div>
@@ -197,10 +230,20 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
   <nav class="topnav">
     <div class="topnav-brand">
       <div class="dot"></div>
-      <span class="brand-txt">Pé de Meia</span>
+      <span class="brand-txt">Avaliações Escolares</span>
     </div>
     <span class="nav-badge" id="nav-role-badge">Escola</span>
     <span class="nav-user" id="nav-user-label"></span>
+    <!-- Seletor de planilha (topnav) -->
+    <div class="sheet-selector" id="sheet-selector-wrap" style="display:none;">
+      <select id="sheet-selector-select" onchange="trocarPlanilha(this.value)">
+        <option value="">Selecionar planilha...</option>
+      </select>
+    </div>
+    <div class="fb-status">
+      <div class="fb-dot syncing" id="fb-dot"></div>
+      <span id="fb-txt">conectando</span>
+    </div>
     <button class="btn-nav" onclick="doLogout()">Sair</button>
   </nav>
 
@@ -211,10 +254,12 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
       <div class="tabs">
         <button class="tab-btn active" onclick="switchTab('dados')">Dados</button>
         <button class="tab-btn" onclick="switchTab('usuarios')">Usuários / Senhas</button>
-        <button class="tab-btn" onclick="switchTab('config')">Configurações</button>
+        <button class="tab-btn" onclick="switchTab('planilhas')">Planilhas</button>
       </div>
 
+      <!-- DADOS -->
       <div class="tab-panel active" id="tab-dados">
+        <div id="adm-sheet-banner"></div>
         <div class="filters-bar">
           <input type="text" id="adm-busca" placeholder="Buscar por nome ou CPF..." oninput="renderAdmCards()"/>
           <select id="adm-inep" onchange="renderAdmCards()"><option value="">Todos os INEPs</option></select>
@@ -223,10 +268,11 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
           <button class="btn-outline" onclick="limparFiltrosAdm()">Limpar</button>
         </div>
         <div id="adm-cards-area">
-          <div class="loading-box"><div class="spinner"></div>Aguardando dados do Google Sheets...</div>
+          <div class="empty-box">Selecione uma planilha no topo para carregar os dados.</div>
         </div>
       </div>
 
+      <!-- USUÁRIOS -->
       <div class="tab-panel" id="tab-usuarios">
         <div class="config-card">
           <div class="config-title">Cadastrar administrador</div>
@@ -234,7 +280,7 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
           <div class="input-row" style="margin-bottom:8px;">
             <input type="text" id="novo-adm-mat" class="finput mono" placeholder="Matrícula" style="max-width:160px;"/>
             <input type="text" id="novo-adm-nome" class="finput" placeholder="Nome (opcional)" style="flex:2;"/>
-            <button class="btn-sec" onclick="cadastrarAdmin()">Cadastrar</button>
+            <button class="btn-sec" id="btn-cadastrar-adm" onclick="cadastrarAdmin()">Cadastrar</button>
           </div>
           <div class="status-msg" id="adm-cadastro-msg"></div>
         </div>
@@ -242,9 +288,10 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
           <span class="sec-title">Administradores</span>
           <span class="sec-meta" id="admins-meta"></span>
         </div>
-        <div class="user-cards" id="admins-cards"></div>
-
-        <div class="config-card">
+        <div class="user-cards" id="admins-cards">
+          <div class="loading-box" style="grid-column:1/-1;"><div class="spinner"></div>Carregando...</div>
+        </div>
+        <div class="config-card" style="margin-top:1.5rem;">
           <div class="config-title">Resetar senha de escola</div>
           <div class="config-sub">Redefine a senha para o valor padrão (número do INEP). No próximo acesso a escola criará nova senha.</div>
           <div class="input-row">
@@ -254,35 +301,39 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
           <div class="status-msg" id="reset-msg"></div>
         </div>
         <div class="sec-hdr">
-          <span class="sec-title">Escolas na base</span>
+          <span class="sec-title">Escolas cadastradas</span>
           <span class="sec-meta" id="users-meta"></span>
         </div>
-        <div class="user-cards" id="users-cards"></div>
+        <div class="user-cards" id="users-cards">
+          <div class="loading-box" style="grid-column:1/-1;"><div class="spinner"></div>Carregando...</div>
+        </div>
       </div>
 
-      <div class="tab-panel" id="tab-config">
+      <!-- PLANILHAS -->
+      <div class="tab-panel" id="tab-planilhas">
         <div class="config-card">
-          <div class="config-title">Fonte de dados — Google Sheets</div>
-          <div class="config-sub">Cole o link de compartilhamento público da planilha. Configure como "Qualquer pessoa com o link pode visualizar".</div>
-          <input type="text" id="sheets-url" class="finput" placeholder="https://docs.google.com/spreadsheets/d/..." style="margin-bottom:8px;"/>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="btn-sec" onclick="salvarSheets()">Salvar e carregar</button>
-            <button class="btn-outline" onclick="recarregarDados()">Recarregar</button>
+          <div class="config-title">Adicionar planilha</div>
+          <div class="config-sub">Cole o link de compartilhamento público do Google Sheets e dê um nome para identificar a planilha. A planilha deve estar como "Qualquer pessoa com o link pode visualizar".</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px;">
+            <input type="text" id="nova-sheet-nome" class="finput" placeholder="Nome da planilha (ex: Avaliações 2025 — GRE 1)"/>
+            <input type="text" id="nova-sheet-url" class="finput" placeholder="https://docs.google.com/spreadsheets/d/..."/>
           </div>
-          <div class="status-msg" id="sheets-msg"></div>
-          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);font-size:12px;color:var(--muted);line-height:1.8;">
-            <strong>Como configurar:</strong><br>
-            1. Abra a planilha no Google Sheets<br>
-            2. Clique em <em>Compartilhar → Qualquer pessoa com o link → Visualizador</em><br>
-            3. Copie o link e cole acima<br>
-            4. Colunas esperadas: <span style="font-family:var(--mono);font-size:11px;">GRE, Município, INEP, Escola, Etapa de Ensino, Período (EJA), CPF, Nome, Data de Nascimento, Situação, Data da avaliação, Descrição, Detalhamento</span>
-          </div>
+          <button class="btn-sec" id="btn-add-sheet" onclick="adicionarPlanilha()">Adicionar planilha</button>
+          <div class="status-msg" id="sheet-add-msg"></div>
+        </div>
+        <div class="sec-hdr">
+          <span class="sec-title">Planilhas cadastradas</span>
+          <span class="sec-meta" id="sheets-meta"></span>
+        </div>
+        <div class="sheet-cards" id="sheets-list">
+          <div class="loading-box" style="grid-column:1/-1;"><div class="spinner"></div>Carregando...</div>
         </div>
       </div>
     </div>
 
     <!-- PAINEL ESCOLA -->
     <div id="panel-escola" style="display:none;">
+      <div id="esc-sheet-banner"></div>
       <div class="filters-bar">
         <input type="text" id="esc-busca" placeholder="Buscar por nome ou CPF..." oninput="renderEscCards()"/>
         <select id="esc-etapa" onchange="renderEscCards()"><option value="">Todas as etapas</option></select>
@@ -290,66 +341,102 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
         <button class="btn-outline" onclick="limparFiltrosEsc()">Limpar</button>
       </div>
       <div id="esc-cards-area">
-        <div class="loading-box"><div class="spinner"></div>Carregando dados...</div>
+        <div class="empty-box">Selecione uma planilha no topo para carregar os dados.</div>
       </div>
     </div>
 
   </div>
 </div>
 
-<script>
-const ADMIN_USER='admin',ADMIN_PASS='admin@2025',STORAGE_KEY='avaliacoes_v2';
-let state={sheetsUrl:'',usuarios:{},admins:{},dados:[],loggedUser:null,isAdmin:false};
-let admFiltered=[],escFiltered=[],admPage=1,escPage=1;
+<script type="module">
+import { initializeApp }    from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, getDocs }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+/* ─── FIREBASE ─── */
+const app = initializeApp({
+  apiKey: "AIzaSyCfMdm5rroL04uwShpGOlod_qtmAg6cfxc",
+  authDomain: "pe-de-meia-a4010.firebaseapp.com",
+  projectId: "pe-de-meia-a4010",
+  storageBucket: "pe-de-meia-a4010.firebasestorage.app",
+  messagingSenderId: "367101968988",
+  appId: "1:367101968988:web:cf4ad1e63ca96bd2c41c99"
+});
+const db = getFirestore(app);
+
+/* ─── HELPERS FIRESTORE ─── */
+const fbUser   = async id  => { try{ const s=await getDoc(doc(db,'usuarios',id)); return s.exists()?s.data():null; }catch{ return null; }};
+const fbSetUser= async (id,d) => setDoc(doc(db,'usuarios',id),d);
+const fbDelUser= async id  => deleteDoc(doc(db,'usuarios',id));
+const fbAllUsers=async()=>{ const s=await getDocs(collection(db,'usuarios')); const r={}; s.forEach(d=>r[d.id]=d.data()); return r; };
+
+/* planilhas — coleção 'planilhas', id = uuid gerado */
+const fbAllSheets=async()=>{ const s=await getDocs(collection(db,'planilhas')); const r={}; s.forEach(d=>r[d.id]=d.data()); return r; };
+const fbSetSheet =(id,d)=> setDoc(doc(db,'planilhas',id),d);
+const fbDelSheet =id   => deleteDoc(doc(db,'planilhas',id));
+
+function genId(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+/* ─── ESTADO ─── */
+const ADMIN_USER='admin', ADMIN_PASS='admin@2025';
+let st = {
+  loggedUser:null, isAdmin:false,
+  dados:[], sheetAtualId:null, sheetAtualNome:'',
+  planilhas:{} /* id:{nome,url} */
+};
+let admFiltered=[], escFiltered=[], admPage=1, escPage=1;
 const PER=12;
 
-function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({sheetsUrl:state.sheetsUrl,usuarios:state.usuarios,admins:state.admins}));}catch(e){}}
-function load(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');if(s.sheetsUrl)state.sheetsUrl=s.sheetsUrl;if(s.usuarios)state.usuarios=s.usuarios;if(s.admins)state.admins=s.admins;}catch(e){}}
+/* ─── INIT ─── */
+(async()=>{
+  try{
+    st.planilhas = await fbAllSheets();
+    fbOnline(true);
+  }catch{ fbOnline(false); }
+})();
 
-/* LOGIN */
-function doLogin(){
+function fbOnline(ok){
+  document.getElementById('fb-dot').className='fb-dot '+(ok?'online':'syncing');
+  document.getElementById('fb-txt').textContent=ok?'online':'conectando';
+}
+
+/* ─── LOGIN ─── */
+window.doLogin=async function(){
   const user=document.getElementById('login-user').value.trim();
   const pass=document.getElementById('login-pass').value;
   const err=document.getElementById('login-err');
+  const btn=document.getElementById('btn-login');
   err.style.display='none';
   if(!user){showErr(err,'Informe o usuário.');return;}
   if(!pass){showErr(err,'Informe a senha.');return;}
-  if(user===ADMIN_USER){
-    if(pass===ADMIN_PASS){state.loggedUser=ADMIN_USER;state.isAdmin=true;entrarApp();}
-    else showErr(err,'Senha incorreta.');
-    return;
-  }
-  const adm=state.admins[user];
-  if(adm!==undefined){
-    if(adm.primeiroAcesso){
-      if(pass!==user){showErr(err,'No primeiro acesso use sua matrícula como senha.');return;}
-      state.loggedUser=user;state.isAdmin=true;irPrimeiroAcesso();
-    } else {
-      if(adm.senha!==pass){showErr(err,'Senha incorreta.');return;}
-      state.loggedUser=user;state.isAdmin=true;entrarApp();
+  btn.disabled=true; btn.textContent='Verificando...';
+  try{
+    if(user===ADMIN_USER){
+      if(pass===ADMIN_PASS){ st.loggedUser=ADMIN_USER; st.isAdmin=true; await entrarApp(); }
+      else showErr(err,'Senha incorreta.');
+      return;
     }
-    return;
-  }
-  const u=state.usuarios[user];
-  if(!u){
-    if(state.dados.length>0&&!state.dados.some(r=>r.inep===user)){showErr(err,'Usuário não encontrado na base.');return;}
-    if(pass!==user){showErr(err,'No primeiro acesso use o número do INEP como senha.');return;}
-    state.loggedUser=user;state.isAdmin=false;irPrimeiroAcesso();return;
-  }
-  if(u.primeiroAcesso){
-    if(pass!==user){showErr(err,'Senha incorreta.');return;}
-    state.loggedUser=user;state.isAdmin=false;irPrimeiroAcesso();return;
-  }
-  if(u.senha!==pass){showErr(err,'Senha incorreta.');return;}
-  state.loggedUser=user;state.isAdmin=false;entrarApp();
-}
+    const u=await fbUser(user);
+    if(!u){
+      if(pass!==user){ showErr(err,'No primeiro acesso use o INEP ou matrícula como senha.'); return; }
+      st.loggedUser=user; st.isAdmin=false; irPrimeiroAcesso(); return;
+    }
+    if(u.primeiroAcesso){
+      if(pass!==user){ showErr(err,'Senha incorreta. No primeiro acesso use o INEP ou matrícula.'); return; }
+      st.loggedUser=user; st.isAdmin=u.role==='admin'; irPrimeiroAcesso(); return;
+    }
+    if(u.senha!==pass){ showErr(err,'Senha incorreta.'); return; }
+    st.loggedUser=user; st.isAdmin=u.role==='admin';
+    await entrarApp();
+  }catch(e){ showErr(err,'Erro de conexão. Tente novamente.'); }
+  finally{ btn.disabled=false; btn.textContent='Entrar'; }
+};
 
 document.addEventListener('keydown',e=>{
   if(e.key!=='Enter')return;
-  if(isActive('screen-login'))doLogin();
-  if(isActive('screen-first-access'))doFirstAccess();
+  if(isActive('screen-login'))window.doLogin();
+  if(isActive('screen-first-access'))window.doFirstAccess();
 });
-function isActive(id){return document.getElementById(id).classList.contains('active');}
 
 function irPrimeiroAcesso(){
   showScreen('screen-first-access');
@@ -358,107 +445,422 @@ function irPrimeiroAcesso(){
   document.getElementById('first-err').style.display='none';
 }
 
-function doFirstAccess(){
+window.doFirstAccess=async function(){
   const np=document.getElementById('new-pass').value;
   const np2=document.getElementById('new-pass-confirm').value;
   const err=document.getElementById('first-err');
+  const btn=document.getElementById('btn-first');
   if(np.length<6){showErr(err,'Mínimo 6 caracteres.');return;}
   if(np!==np2){showErr(err,'As senhas não coincidem.');return;}
-  if(state.admins[state.loggedUser]!==undefined)
-    state.admins[state.loggedUser]={...state.admins[state.loggedUser],senha:np,primeiroAcesso:false};
-  else
-    state.usuarios[state.loggedUser]={senha:np,primeiroAcesso:false};
-  save();entrarApp();
-}
+  btn.disabled=true; btn.textContent='Salvando...';
+  try{
+    const ex=await fbUser(st.loggedUser);
+    await fbSetUser(st.loggedUser,{ senha:np, primeiroAcesso:false, role:ex?(ex.role||'escola'):'escola', nome:ex?(ex.nome||''):'' });
+    await entrarApp();
+  }catch{ showErr(err,'Erro ao salvar. Tente novamente.'); }
+  finally{ btn.disabled=false; btn.textContent='Salvar e entrar'; }
+};
 
-function checkStrength(){
-  const v=document.getElementById('new-pass').value;
-  let s=0;
-  if(v.length>=6)s++;if(v.length>=10)s++;
-  if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+window.checkStrength=function(){
+  const v=document.getElementById('new-pass').value; let s=0;
+  if(v.length>=6)s++; if(v.length>=10)s++;
+  if(/[A-Z]/.test(v))s++; if(/[0-9]/.test(v))s++; if(/[^A-Za-z0-9]/.test(v))s++;
   const pct=[0,25,45,65,85,100][s];
   const col=['#E24B4A','#E24B4A','#EF9F27','#EF9F27','#16803C','#16803C'][s];
   const lbl=['','Fraca','Razoável','Moderada','Forte','Muito forte'][s];
-  const f=document.getElementById('strength-fill');f.style.width=pct+'%';f.style.background=col;
-  const l=document.getElementById('strength-label');l.textContent=lbl;l.style.color=col;
-}
+  const f=document.getElementById('strength-fill'); f.style.width=pct+'%'; f.style.background=col;
+  const l=document.getElementById('strength-label'); l.textContent=lbl; l.style.color=col;
+};
 
-/* APP */
-function entrarApp(){
+/* ─── ENTRAR APP ─── */
+async function entrarApp(){
   showScreen('screen-app');
-  const adm=state.admins[state.loggedUser];
-  document.getElementById('nav-user-label').textContent=adm&&adm.nome?adm.nome+' ('+state.loggedUser+')':state.loggedUser;
-  if(state.isAdmin){
+  const u=await fbUser(st.loggedUser);
+  document.getElementById('nav-user-label').textContent=u&&u.nome?u.nome+' ('+st.loggedUser+')':st.loggedUser;
+  st.planilhas=await fbAllSheets();
+
+  if(st.isAdmin){
     document.getElementById('nav-role-badge').textContent='Admin';
     document.getElementById('nav-role-badge').classList.add('admin');
     document.getElementById('panel-admin').style.display='block';
     document.getElementById('panel-escola').style.display='none';
-    if(state.sheetsUrl)document.getElementById('sheets-url').value=state.sheetsUrl;
-    if(state.dados.length){populaFiltrosAdm();renderAdmCards();renderUsersCards();renderAdminsCards();}
-    else if(state.sheetsUrl)carregarSheets(state.sheetsUrl);
-    else{renderAdmCardsVazio();renderAdminsCards();}
+    preencherSeletor(true);
+    await renderAdminsCards();
+    await renderUsersCards();
+    await renderSheetsList();
   } else {
     document.getElementById('nav-role-badge').textContent='Escola';
     document.getElementById('nav-role-badge').classList.remove('admin');
     document.getElementById('panel-admin').style.display='none';
     document.getElementById('panel-escola').style.display='block';
-    if(state.dados.length){populaFiltrosEsc();renderEscCards();}
-    else if(state.sheetsUrl)carregarSheets(state.sheetsUrl);
-    else renderEscCardsVazio();
+    preencherSeletor(false);
   }
 }
 
-function doLogout(){
-  state.loggedUser=null;state.isAdmin=false;
+window.doLogout=function(){
+  st.loggedUser=null; st.isAdmin=false; st.dados=[]; st.sheetAtualId=null; st.sheetAtualNome='';
   document.getElementById('login-user').value='';
   document.getElementById('login-pass').value='';
   document.getElementById('login-err').style.display='none';
+  document.getElementById('sheet-selector-wrap').style.display='none';
   showScreen('screen-login');
+};
+
+/* ─── SELETOR DE PLANILHA (topnav) ─── */
+function preencherSeletor(isAdmin){
+  const wrap=document.getElementById('sheet-selector-wrap');
+  const sel=document.getElementById('sheet-selector-select');
+  const ids=Object.keys(st.planilhas);
+  if(!ids.length){ wrap.style.display='none'; return; }
+  wrap.style.display='flex';
+  sel.innerHTML='<option value="">Selecionar planilha...</option>'+
+    ids.map(id=>`<option value="${id}">${esc(st.planilhas[id].nome)}</option>`).join('');
+  if(st.sheetAtualId) sel.value=st.sheetAtualId;
 }
 
-/* GOOGLE SHEETS */
-function extrairId(url){const m=url.match(/\/d\/([a-zA-Z0-9-_]+)/);return m?m[1]:null;}
-function csvUrl(url){const id=extrairId(url);return`https://docs.google.com/spreadsheets/d/${id}/export?format=csv&id=${id}`;}
+window.trocarPlanilha=async function(id){
+  if(!id){ st.dados=[]; st.sheetAtualId=null; st.sheetAtualNome=''; atualizarBanner(); return; }
+  const sheet=st.planilhas[id];
+  if(!sheet) return;
+  st.sheetAtualId=id; st.sheetAtualNome=sheet.nome;
+  atualizarBanner();
+  await carregarSheets(sheet.url);
+};
 
-function salvarSheets(){
-  const url=document.getElementById('sheets-url').value.trim();
-  const msg=document.getElementById('sheets-msg');
-  if(!url){showStatusMsg(msg,'Cole o link do Google Sheets.','err');return;}
-  if(!extrairId(url)){showStatusMsg(msg,'Link inválido.','err');return;}
-  state.sheetsUrl=url;save();carregarSheets(url);
-}
-function recarregarDados(){
-  if(!state.sheetsUrl){showStatusMsg(document.getElementById('sheets-msg'),'Nenhum link configurado.','err');return;}
-  carregarSheets(state.sheetsUrl);
+function atualizarBanner(){
+  const admBanner=document.getElementById('adm-sheet-banner');
+  const escBanner=document.getElementById('esc-sheet-banner');
+  const html=st.sheetAtualNome
+    ?`<div class="sheet-banner"><div><div class="sb-label">Planilha ativa</div><div class="sb-name">${esc(st.sheetAtualNome)}</div></div></div>`
+    :'';
+  if(admBanner) admBanner.innerHTML=html;
+  if(escBanner) escBanner.innerHTML=html;
 }
 
-function carregarSheets(url){
-  const msg=document.getElementById('sheets-msg');
-  const loading='<div class="loading-box"><div class="spinner"></div>Carregando dados do Google Sheets...</div>';
-  if(state.isAdmin)document.getElementById('adm-cards-area').innerHTML=loading;
+/* ─── CARREGAR SHEETS ─── */
+async function carregarSheets(url){
+  const loading='<div class="loading-box"><div class="spinner"></div>Carregando dados...</div>';
+  if(st.isAdmin) document.getElementById('adm-cards-area').innerHTML=loading;
   else document.getElementById('esc-cards-area').innerHTML=loading;
-  fetch(csvUrl(url))
-    .then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.text();})
-    .then(csv=>{
-      const rows=parseCSV(csv);
-      if(!rows.length)throw new Error('Planilha vazia.');
-      state.dados=rows;
-      rows.forEach(r=>{if(r.inep&&!state.usuarios[r.inep])state.usuarios[r.inep]={senha:r.inep,primeiroAcesso:true};});
-      save();
-      if(msg)showStatusMsg(msg,rows.length+' registros carregados.','ok');
-      if(state.isAdmin){populaFiltrosAdm();renderAdmCards();renderUsersCards();renderAdminsCards();}
-      else{populaFiltrosEsc();renderEscCards();}
-    })
-    .catch(e=>{
-      const m='Não foi possível carregar. Verifique se a planilha está pública. ('+e.message+')';
-      if(msg)showStatusMsg(msg,m,'err');
-      if(state.isAdmin)renderAdmCardsVazio(m);else renderEscCardsVazio(m);
-    });
+  try{
+    const id=extrairId(url);
+    if(!id) throw new Error('Link inválido.');
+    const r=await fetch(`https://docs.google.com/spreadsheets/d/${id}/export?format=csv&id=${id}`);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const rows=parseCSV(await r.text());
+    if(!rows.length) throw new Error('Planilha vazia ou sem dados reconhecidos.');
+    st.dados=rows;
+    // Registra INEPs novos no Firestore
+    for(const row of rows){
+      if(row.inep){ const ex=await fbUser(row.inep); if(!ex) await fbSetUser(row.inep,{senha:row.inep,primeiroAcesso:true,role:'escola',nome:''}); }
+    }
+    if(st.isAdmin){ populaFiltrosAdm(); renderAdmCards(); await renderUsersCards(); }
+    else { populaFiltrosEsc(); renderEscCards(); }
+  }catch(e){
+    const msg='Erro ao carregar: '+e.message;
+    if(st.isAdmin) document.getElementById('adm-cards-area').innerHTML=`<div class="empty-box">${msg}<p>Verifique se a planilha está pública.</p></div>`;
+    else document.getElementById('esc-cards-area').innerHTML=`<div class="empty-box">${msg}</div>`;
+  }
 }
 
-/* CSV */
+/* ─── GESTÃO DE PLANILHAS ─── */
+window.adicionarPlanilha=async function(){
+  const nome=document.getElementById('nova-sheet-nome').value.trim();
+  const url=document.getElementById('nova-sheet-url').value.trim();
+  const msg=document.getElementById('sheet-add-msg');
+  const btn=document.getElementById('btn-add-sheet');
+  if(!nome){showStatusMsg(msg,'Informe o nome da planilha.','err');return;}
+  if(!url||!extrairId(url)){showStatusMsg(msg,'Link do Google Sheets inválido.','err');return;}
+  btn.disabled=true; btn.textContent='Adicionando...';
+  try{
+    const id=genId();
+    await fbSetSheet(id,{nome,url,criadoEm:new Date().toISOString()});
+    st.planilhas[id]={nome,url};
+    document.getElementById('nova-sheet-nome').value='';
+    document.getElementById('nova-sheet-url').value='';
+    preencherSeletor(true);
+    await renderSheetsList();
+    showStatusMsg(msg,'Planilha "'+nome+'" adicionada.','ok');
+  }catch{ showStatusMsg(msg,'Erro ao salvar. Tente novamente.','err'); }
+  finally{ btn.disabled=false; btn.textContent='Adicionar planilha'; }
+};
+
+window.renderSheetsList=async function(){
+  st.planilhas=await fbAllSheets();
+  const el=document.getElementById('sheets-list');
+  const ids=Object.keys(st.planilhas);
+  document.getElementById('sheets-meta').textContent=ids.length+' planilha(s) cadastrada(s)';
+  if(!ids.length){ el.innerHTML='<div class="empty-box">Nenhuma planilha cadastrada.</div>'; return; }
+  el.innerHTML=ids.map(id=>{
+    const s=st.planilhas[id];
+    return `<div class="sheet-card" id="sc-${id}">
+      <div class="sc-top">
+        <div style="min-width:0;">
+          <div class="sc-name">${esc(s.nome)}</div>
+          <div class="sc-url">${esc(s.url)}</div>
+        </div>
+      </div>
+      <div class="sc-actions">
+        <button class="btn-sm primary" onclick="selecionarSheetAdmin('${id}')">Selecionar</button>
+        <button class="btn-sm" onclick="editarSheet('${id}')">Editar</button>
+        <button class="btn-sm danger" onclick="excluirSheet('${id}')">Excluir</button>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+window.selecionarSheetAdmin=function(id){
+  document.getElementById('sheet-selector-select').value=id;
+  trocarPlanilha(id);
+  switchTab('dados');
+};
+
+window.editarSheet=function(id){
+  const s=st.planilhas[id];
+  const card=document.getElementById('sc-'+id);
+  card.classList.add('editing');
+  card.innerHTML=`
+    <div class="sc-edit-fields">
+      <input type="text" id="edit-nome-${id}" value="${esc(s.nome)}" placeholder="Nome da planilha"/>
+      <input type="text" id="edit-url-${id}" value="${esc(s.url)}" placeholder="Link do Google Sheets"/>
+    </div>
+    <div class="sc-edit-btns">
+      <button class="btn-sec" style="padding:7px 14px;font-size:12px;" onclick="salvarEdicaoSheet('${id}')">Salvar</button>
+      <button class="btn-outline" onclick="renderSheetsList()">Cancelar</button>
+    </div>`;
+};
+
+window.salvarEdicaoSheet=async function(id){
+  const nome=document.getElementById('edit-nome-'+id).value.trim();
+  const url=document.getElementById('edit-url-'+id).value.trim();
+  const msg=document.getElementById('sheet-add-msg');
+  if(!nome){showStatusMsg(msg,'Informe o nome.','err');return;}
+  if(!url||!extrairId(url)){showStatusMsg(msg,'Link inválido.','err');return;}
+  try{
+    await fbSetSheet(id,{...st.planilhas[id],nome,url});
+    st.planilhas[id]={...st.planilhas[id],nome,url};
+    if(st.sheetAtualId===id){ st.sheetAtualNome=nome; atualizarBanner(); }
+    preencherSeletor(true);
+    await renderSheetsList();
+    showStatusMsg(msg,'Planilha atualizada.','ok');
+  }catch{ showStatusMsg(msg,'Erro ao salvar.','err'); }
+};
+
+window.excluirSheet=async function(id){
+  const s=st.planilhas[id];
+  if(!confirm('Excluir a planilha "'+s.nome+'"? Esta ação não pode ser desfeita.')) return;
+  try{
+    await fbDelSheet(id);
+    delete st.planilhas[id];
+    if(st.sheetAtualId===id){ st.sheetAtualId=null; st.sheetAtualNome=''; st.dados=[]; atualizarBanner(); }
+    preencherSeletor(true);
+    await renderSheetsList();
+  }catch(e){ alert('Erro ao excluir.'); }
+};
+
+/* ─── FILTROS ─── */
+function populaFiltrosAdm(){
+  setOpts('adm-inep', [...new Set(st.dados.map(d=>d.inep).filter(Boolean))].sort(), 'Todos os INEPs');
+  setOpts('adm-etapa',[...new Set(st.dados.map(d=>d.etapa).filter(Boolean))].sort(),'Todas as etapas');
+  setOpts('adm-sit',  [...new Set(st.dados.map(d=>d.sit).filter(Boolean))].sort(),  'Todas as situações');
+}
+function populaFiltrosEsc(){
+  const meus=st.dados.filter(d=>d.inep===st.loggedUser);
+  setOpts('esc-etapa',[...new Set(meus.map(d=>d.etapa).filter(Boolean))].sort(),'Todas as etapas');
+  setOpts('esc-sit',  [...new Set(meus.map(d=>d.sit).filter(Boolean))].sort(),  'Todas as situações');
+}
+
+/* ─── RENDER ADMIN CARDS ─── */
+window.renderAdmCards=function(){
+  const busca=document.getElementById('adm-busca').value.toLowerCase();
+  const inep=document.getElementById('adm-inep').value;
+  const etapa=document.getElementById('adm-etapa').value;
+  const sit=document.getElementById('adm-sit').value;
+  admFiltered=st.dados.filter(d=>
+    (!busca||d.nome.toLowerCase().includes(busca)||d.cpf.toLowerCase().includes(busca))
+    &&(!inep||d.inep===inep)&&(!etapa||d.etapa===etapa)&&(!sit||d.sit===sit));
+  admPage=1; buildAdmCards();
+};
+function buildAdmCards(){
+  const total=admFiltered.length, totalP=Math.max(1,Math.ceil(total/PER));
+  if(admPage>totalP)admPage=totalP;
+  const slice=admFiltered.slice((admPage-1)*PER,admPage*PER);
+  const area=document.getElementById('adm-cards-area');
+  if(!slice.length){area.innerHTML='<div class="empty-box">Nenhum registro encontrado.</div>';return;}
+  area.innerHTML=`
+    <div class="sec-hdr"><span class="sec-meta">${total} registro(s) — base: ${st.dados.length} total</span></div>
+    <div class="cards-grid">${slice.map(d=>alunoCard(d,true)).join('')}</div>
+    <div class="pager">
+      <button class="btn-outline" onclick="changePageAdm(-1)">← Anterior</button>
+      <span class="pager-info">Página ${admPage} de ${totalP}</span>
+      <button class="btn-outline" onclick="changePageAdm(1)">Próxima →</button>
+    </div>`;
+}
+window.changePageAdm=function(d){const tp=Math.max(1,Math.ceil(admFiltered.length/PER));admPage=Math.min(tp,Math.max(1,admPage+d));buildAdmCards();};
+window.limparFiltrosAdm=function(){['adm-busca','adm-inep','adm-etapa','adm-sit'].forEach(id=>document.getElementById(id).value='');renderAdmCards();};
+
+/* ─── RENDER ESCOLA CARDS ─── */
+window.renderEscCards=function(){
+  const meus=st.dados.filter(d=>d.inep===st.loggedUser);
+  const busca=document.getElementById('esc-busca').value.toLowerCase();
+  const etapa=document.getElementById('esc-etapa').value;
+  const sit=document.getElementById('esc-sit').value;
+  escFiltered=meus.filter(d=>
+    (!busca||d.nome.toLowerCase().includes(busca)||d.cpf.toLowerCase().includes(busca))
+    &&(!etapa||d.etapa===etapa)&&(!sit||d.sit===sit));
+  escPage=1; buildEscCards();
+};
+function buildEscCards(){
+  const total=escFiltered.length, totalP=Math.max(1,Math.ceil(total/PER));
+  if(escPage>totalP)escPage=totalP;
+  const slice=escFiltered.slice((escPage-1)*PER,escPage*PER);
+  const area=document.getElementById('esc-cards-area');
+  const nomeEsc=(st.dados.find(d=>d.inep===st.loggedUser)||{}).escola||'INEP '+st.loggedUser;
+  if(!slice.length){
+    area.innerHTML=st.sheetAtualId
+      ?'<div class="empty-box">Nenhum registro encontrado para o seu INEP nesta planilha.</div>'
+      :'<div class="empty-box">Selecione uma planilha no topo para carregar os dados.</div>';
+    return;
+  }
+  area.innerHTML=`
+    <div class="sec-hdr">
+      <span class="sec-title">${esc(nomeEsc)}</span>
+      <span class="sec-meta">${total} registro(s)</span>
+    </div>
+    <div class="cards-grid">${slice.map(d=>alunoCard(d,false)).join('')}</div>
+    <div class="pager">
+      <button class="btn-outline" onclick="changePageEsc(-1)">← Anterior</button>
+      <span class="pager-info">Página ${escPage} de ${totalP}</span>
+      <button class="btn-outline" onclick="changePageEsc(1)">Próxima →</button>
+    </div>`;
+}
+window.changePageEsc=function(d){const tp=Math.max(1,Math.ceil(escFiltered.length/PER));escPage=Math.min(tp,Math.max(1,escPage+d));buildEscCards();};
+window.limparFiltrosEsc=function(){['esc-busca','esc-etapa','esc-sit'].forEach(id=>document.getElementById(id).value='');renderEscCards();};
+
+/* ─── CARD ALUNO ─── */
+function alunoCard(d,showInep){
+  const det=(d.det||'').trim();
+  return `<div class="aluno-card">
+    <div class="ac-top">
+      <div style="min-width:0;">
+        <div class="ac-nome">${esc(d.nome)||'—'}</div>
+        ${showInep&&d.inep?`<div class="ac-inep">INEP ${d.inep}</div>`:''}
+      </div>
+      <span class="badge ${badgeCls(d.sit)}" style="flex-shrink:0;">${esc(d.sit)||'—'}</span>
+    </div>
+    <div class="ac-fields">
+      <div class="ac-field"><span class="ac-lbl">CPF</span><span class="ac-val mono">${esc(d.cpf)||'—'}</span></div>
+      <div class="ac-field"><span class="ac-lbl">Nascimento</span><span class="ac-val">${esc(d.nasc)||'—'}</span></div>
+      <div class="ac-field" style="grid-column:1/-1;"><span class="ac-lbl">Etapa de ensino</span><span class="ac-val">${esc(d.etapa)||'—'}</span></div>
+    </div>
+    ${det?`<div class="ac-det"><div class="ac-det-lbl">Detalhamento</div>${esc(det)}</div>`:''}
+  </div>`;
+}
+
+/* ─── USER CARDS ─── */
+window.renderUsersCards=async function(){
+  const el=document.getElementById('users-cards');
+  el.innerHTML='<div class="loading-box" style="grid-column:1/-1;"><div class="spinner"></div>Carregando...</div>';
+  const all=await fbAllUsers();
+  const escolas=Object.entries(all).filter(([,u])=>u.role==='escola').sort((a,b)=>a[0].localeCompare(b[0]));
+  document.getElementById('users-meta').textContent=escolas.length+' escola(s)';
+  if(!escolas.length){el.innerHTML='<p style="font-size:13px;color:var(--faint);">Nenhuma escola cadastrada.</p>';return;}
+  el.innerHTML=escolas.map(([inep,u])=>{
+    const status=u.primeiroAcesso?'Aguardando 1º acesso':'Ativo';
+    const cls=u.primeiroAcesso?'b-pend':'b-aprov';
+    return `<div class="user-card">
+      <div class="uc-top">
+        <div style="min-width:0;"><div class="uc-id">${inep}</div><div class="uc-sub">${esc(u.nome||'')}</div></div>
+        <span class="badge ${cls}" style="flex-shrink:0;">${status}</span>
+      </div>
+      <div class="uc-actions"><button class="btn-sm" onclick="resetSenhaInep('${inep}')">Resetar senha</button></div>
+    </div>`;
+  }).join('');
+};
+
+window.renderAdminsCards=async function(){
+  const el=document.getElementById('admins-cards');
+  el.innerHTML='<div class="loading-box" style="grid-column:1/-1;"><div class="spinner"></div>Carregando...</div>';
+  const all=await fbAllUsers();
+  const admins=Object.entries(all).filter(([id,u])=>u.role==='admin'&&id!==ADMIN_USER).sort((a,b)=>a[0].localeCompare(b[0]));
+  document.getElementById('admins-meta').textContent=admins.length+' administrador(es)';
+  if(!admins.length){el.innerHTML='<p style="font-size:13px;color:var(--faint);">Nenhum administrador cadastrado.</p>';return;}
+  el.innerHTML=admins.map(([mat,a])=>{
+    const status=a.primeiroAcesso?'Aguardando 1º acesso':'Ativo';
+    const cls=a.primeiroAcesso?'b-pend':'b-aprov';
+    return `<div class="user-card">
+      <div class="uc-top">
+        <div><div class="uc-id">${mat}</div><div class="uc-sub">${esc(a.nome||'Sem nome')}</div></div>
+        <span class="badge ${cls}" style="flex-shrink:0;">${status}</span>
+      </div>
+      <div class="uc-actions">
+        <button class="btn-sm" onclick="resetSenhaAdmin('${mat}')">Resetar senha</button>
+        <button class="btn-sm danger" onclick="removerAdmin('${mat}')">Remover</button>
+      </div>
+    </div>`;
+  }).join('');
+};
+
+/* ─── GESTÃO USUÁRIOS ─── */
+window.cadastrarAdmin=async function(){
+  const mat=document.getElementById('novo-adm-mat').value.trim();
+  const nome=document.getElementById('novo-adm-nome').value.trim();
+  const msg=document.getElementById('adm-cadastro-msg');
+  const btn=document.getElementById('btn-cadastrar-adm');
+  if(!mat){showStatusMsg(msg,'Informe a matrícula.','err');return;}
+  if(mat===ADMIN_USER){showStatusMsg(msg,'Matrícula reservada.','err');return;}
+  btn.disabled=true; btn.textContent='Cadastrando...';
+  try{
+    const ex=await fbUser(mat);
+    if(ex){showStatusMsg(msg,'Matrícula já cadastrada.','err');return;}
+    await fbSetUser(mat,{senha:mat,primeiroAcesso:true,role:'admin',nome});
+    document.getElementById('novo-adm-mat').value='';
+    document.getElementById('novo-adm-nome').value='';
+    await renderAdminsCards();
+    showStatusMsg(msg,'Admin "'+mat+'" cadastrado. Senha inicial: matrícula.','ok');
+  }catch{showStatusMsg(msg,'Erro ao cadastrar.','err');}
+  finally{btn.disabled=false;btn.textContent='Cadastrar';}
+};
+
+window.resetSenhaAdmin=async function(mat){
+  const u=await fbUser(mat);
+  await fbSetUser(mat,{...(u||{}),senha:mat,primeiroAcesso:true});
+  await renderAdminsCards();
+  showStatusMsg(document.getElementById('adm-cadastro-msg'),'Senha de '+mat+' resetada.','ok');
+};
+
+window.removerAdmin=async function(mat){
+  if(!confirm('Remover o administrador "'+mat+'"?'))return;
+  await fbDelUser(mat); await renderAdminsCards();
+};
+
+window.resetSenha=function(){resetSenhaInep(document.getElementById('reset-inep').value.trim());};
+
+window.resetSenhaInep=async function(inep){
+  const msg=document.getElementById('reset-msg');
+  if(!inep){showStatusMsg(msg,'Informe o INEP.','err');return;}
+  try{
+    const u=await fbUser(inep);
+    await fbSetUser(inep,{...(u||{}),senha:inep,primeiroAcesso:true,role:'escola'});
+    document.getElementById('reset-inep').value='';
+    await renderUsersCards();
+    showStatusMsg(msg,'Senha de '+inep+' resetada.','ok');
+  }catch{showStatusMsg(msg,'Erro ao resetar.','err');}
+};
+
+/* ─── TABS ─── */
+window.switchTab=async function(name){
+  const names=['dados','usuarios','planilhas'];
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',names[i]===name));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(name==='usuarios'){await renderAdminsCards();await renderUsersCards();}
+  if(name==='planilhas'){await renderSheetsList();}
+};
+
+/* ─── CSV ─── */
 function parseCSV(csv){
-  const lines=csv.split('\n');if(lines.length<2)return[];
+  const lines=csv.split('\n'); if(lines.length<2)return[];
   const headers=splitLine(lines[0]).map(h=>h.trim().replace(/^"|"$/g,''));
   function fc(cands){
     for(const c of cands){
@@ -469,15 +871,15 @@ function parseCSV(csv){
   }
   const ci={
     inep:fc(['INEP','inep']),cpf:fc(['CPF','cpf']),nome:fc(['Nome','nome']),
-    nasc:fc(['DatadeNascimento','DataNascimento','nascimento','Nascimento']),
+    nasc:fc(['DatadeNascimento','DataNascimento','nascimento']),
     etapa:fc(['EtapadeEnsino','Etapa','etapa']),
     sit:fc(['Situação','Situacao','situação','situacao']),
     det:fc(['Detalhamento','detalhamento','Descrição','Descricao']),
-    escola:fc(['Escola','escola']),gre:fc(['GRE','gre']),mun:fc(['Município','Municipio','municipio'])
+    escola:fc(['Escola','escola']),gre:fc(['GRE','gre']),mun:fc(['Município','Municipio'])
   };
   const result=[];
   for(let i=1;i<lines.length;i++){
-    const l=lines[i].trim();if(!l)continue;
+    const l=lines[i].trim(); if(!l)continue;
     const cols=splitLine(l).map(c=>c.trim().replace(/^"|"$/g,''));
     const g=idx=>idx>=0?(cols[idx]||''):'';
     const row={inep:g(ci.inep),cpf:g(ci.cpf),nome:g(ci.nome),nasc:g(ci.nasc),etapa:g(ci.etapa),sit:g(ci.sit),det:g(ci.det),escola:g(ci.escola),gre:g(ci.gre),mun:g(ci.mun)};
@@ -496,203 +898,16 @@ function splitLine(line){
   r.push(cur);return r;
 }
 
-/* FILTROS */
-function populaFiltrosAdm(){
-  setOpts('adm-inep',[...new Set(state.dados.map(d=>d.inep).filter(Boolean))].sort(),'Todos os INEPs');
-  setOpts('adm-etapa',[...new Set(state.dados.map(d=>d.etapa).filter(Boolean))].sort(),'Todas as etapas');
-  setOpts('adm-sit',[...new Set(state.dados.map(d=>d.sit).filter(Boolean))].sort(),'Todas as situações');
-}
-function populaFiltrosEsc(){
-  const meus=state.dados.filter(d=>d.inep===state.loggedUser);
-  setOpts('esc-etapa',[...new Set(meus.map(d=>d.etapa).filter(Boolean))].sort(),'Todas as etapas');
-  setOpts('esc-sit',[...new Set(meus.map(d=>d.sit).filter(Boolean))].sort(),'Todas as situações');
-}
-
-/* RENDER ADMIN */
-function renderAdmCards(){
-  const busca=document.getElementById('adm-busca').value.toLowerCase();
-  const inep=document.getElementById('adm-inep').value;
-  const etapa=document.getElementById('adm-etapa').value;
-  const sit=document.getElementById('adm-sit').value;
-  admFiltered=state.dados.filter(d=>
-    (!busca||d.nome.toLowerCase().includes(busca)||d.cpf.toLowerCase().includes(busca))
-    &&(!inep||d.inep===inep)&&(!etapa||d.etapa===etapa)&&(!sit||d.sit===sit));
-  admPage=1;buildAdmCards();
-}
-function buildAdmCards(){
-  const total=admFiltered.length;
-  const totalP=Math.max(1,Math.ceil(total/PER));
-  if(admPage>totalP)admPage=totalP;
-  const slice=admFiltered.slice((admPage-1)*PER,admPage*PER);
-  const area=document.getElementById('adm-cards-area');
-  if(!slice.length){area.innerHTML='<div class="empty-box">Nenhum registro encontrado.</div>';return;}
-  area.innerHTML=`
-    <div class="sec-hdr"><span class="sec-meta">${total} registro(s) — base: ${state.dados.length} total</span></div>
-    <div class="cards-grid">${slice.map(d=>alunoCard(d,true)).join('')}</div>
-    <div class="pager">
-      <button class="btn-outline" onclick="changePageAdm(-1)">← Anterior</button>
-      <span class="pager-info">Página ${admPage} de ${totalP}</span>
-      <button class="btn-outline" onclick="changePageAdm(1)">Próxima →</button>
-    </div>`;
-}
-function renderAdmCardsVazio(msg){document.getElementById('adm-cards-area').innerHTML=`<div class="empty-box">Nenhum dado carregado.<p>${msg||'Configure a fonte de dados na aba Configurações.'}</p></div>`;}
-function changePageAdm(dir){const tp=Math.max(1,Math.ceil(admFiltered.length/PER));admPage=Math.min(tp,Math.max(1,admPage+dir));buildAdmCards();}
-function limparFiltrosAdm(){['adm-busca','adm-inep','adm-etapa','adm-sit'].forEach(id=>document.getElementById(id).value='');renderAdmCards();}
-
-/* RENDER ESCOLA */
-function renderEscCards(){
-  const meus=state.dados.filter(d=>d.inep===state.loggedUser);
-  const busca=document.getElementById('esc-busca').value.toLowerCase();
-  const etapa=document.getElementById('esc-etapa').value;
-  const sit=document.getElementById('esc-sit').value;
-  escFiltered=meus.filter(d=>
-    (!busca||d.nome.toLowerCase().includes(busca)||d.cpf.toLowerCase().includes(busca))
-    &&(!etapa||d.etapa===etapa)&&(!sit||d.sit===sit));
-  escPage=1;buildEscCards();
-}
-function buildEscCards(){
-  const total=escFiltered.length;
-  const totalP=Math.max(1,Math.ceil(total/PER));
-  if(escPage>totalP)escPage=totalP;
-  const slice=escFiltered.slice((escPage-1)*PER,escPage*PER);
-  const area=document.getElementById('esc-cards-area');
-  const nomeEsc=(state.dados.find(d=>d.inep===state.loggedUser)||{}).escola||'INEP '+state.loggedUser;
-  if(!slice.length){area.innerHTML='<div class="empty-box">Nenhum registro encontrado.</div>';return;}
-  area.innerHTML=`
-    <div class="sec-hdr">
-      <span class="sec-title">${nomeEsc}</span>
-      <span class="sec-meta">${total} registro(s)</span>
-    </div>
-    <div class="cards-grid">${slice.map(d=>alunoCard(d,false)).join('')}</div>
-    <div class="pager">
-      <button class="btn-outline" onclick="changePageEsc(-1)">← Anterior</button>
-      <span class="pager-info">Página ${escPage} de ${totalP}</span>
-      <button class="btn-outline" onclick="changePageEsc(1)">Próxima →</button>
-    </div>`;
-}
-function renderEscCardsVazio(msg){document.getElementById('esc-cards-area').innerHTML=`<div class="empty-box">Nenhum dado disponível.<p>${msg||'Entre em contato com o administrador.'}</p></div>`;}
-function changePageEsc(dir){const tp=Math.max(1,Math.ceil(escFiltered.length/PER));escPage=Math.min(tp,Math.max(1,escPage+dir));buildEscCards();}
-function limparFiltrosEsc(){['esc-busca','esc-etapa','esc-sit'].forEach(id=>document.getElementById(id).value='');renderEscCards();}
-
-/* CARD HTML */
-function alunoCard(d,showInep){
-  const det=(d.det||'').trim();
-  return `<div class="aluno-card">
-    <div class="ac-top">
-      <div style="min-width:0;">
-        <div class="ac-nome">${d.nome||'—'}</div>
-        ${showInep&&d.inep?`<div class="ac-inep">INEP ${d.inep}</div>`:''}
-      </div>
-      <span class="badge ${badgeCls(d.sit)}" style="flex-shrink:0;">${d.sit||'—'}</span>
-    </div>
-    <div class="ac-fields">
-      <div class="ac-field">
-        <span class="ac-lbl">CPF</span>
-        <span class="ac-val mono">${d.cpf||'—'}</span>
-      </div>
-      <div class="ac-field">
-        <span class="ac-lbl">Nascimento</span>
-        <span class="ac-val">${d.nasc||'—'}</span>
-      </div>
-      <div class="ac-field" style="grid-column:1/-1;">
-        <span class="ac-lbl">Etapa de ensino</span>
-        <span class="ac-val">${d.etapa||'—'}</span>
-      </div>
-    </div>
-    ${det?`<div class="ac-det"><div class="ac-det-lbl">Detalhamento</div>${det}</div>`:''}
-  </div>`;
-}
-
-/* USER CARDS */
-function renderUsersCards(){
-  const ineps=[...new Set(state.dados.map(d=>d.inep).filter(Boolean))].sort();
-  document.getElementById('users-meta').textContent=ineps.length+' escola(s) na base';
-  document.getElementById('users-cards').innerHTML=ineps.map(inep=>{
-    const u=state.usuarios[inep];
-    const esc=state.dados.find(d=>d.inep===inep);
-    const qtd=state.dados.filter(d=>d.inep===inep).length;
-    const status=!u?'Nunca acessou':u.primeiroAcesso?'Aguardando 1º acesso':'Ativo';
-    const cls=!u?'b-outro':u.primeiroAcesso?'b-pend':'b-aprov';
-    return `<div class="user-card">
-      <div class="uc-top">
-        <div style="min-width:0;">
-          <div class="uc-id">${inep}</div>
-          <div class="uc-sub">${esc?esc.escola:'—'} · ${qtd} reg.</div>
-        </div>
-        <span class="badge ${cls}" style="flex-shrink:0;">${status}</span>
-      </div>
-      <div class="uc-actions">
-        <button class="btn-sm" onclick="resetSenhaInep('${inep}')">Resetar senha</button>
-      </div>
-    </div>`;
-  }).join('')||'<p style="font-size:13px;color:var(--faint);">Nenhuma escola carregada.</p>';
-}
-
-function renderAdminsCards(){
-  const mats=Object.keys(state.admins).sort();
-  document.getElementById('admins-meta').textContent=mats.length+' administrador(es)';
-  document.getElementById('admins-cards').innerHTML=mats.map(mat=>{
-    const a=state.admins[mat];
-    const status=a.primeiroAcesso?'Aguardando 1º acesso':'Ativo';
-    const cls=a.primeiroAcesso?'b-pend':'b-aprov';
-    return `<div class="user-card">
-      <div class="uc-top">
-        <div>
-          <div class="uc-id">${mat}</div>
-          <div class="uc-sub">${a.nome||'Sem nome'}</div>
-        </div>
-        <span class="badge ${cls}" style="flex-shrink:0;">${status}</span>
-      </div>
-      <div class="uc-actions">
-        <button class="btn-sm" onclick="resetSenhaAdmin('${mat}')">Resetar senha</button>
-        <button class="btn-sm danger" onclick="removerAdmin('${mat}')">Remover</button>
-      </div>
-    </div>`;
-  }).join('')||'<p style="font-size:13px;color:var(--faint);">Nenhum administrador cadastrado.</p>';
-}
-
-/* GESTÃO */
-function cadastrarAdmin(){
-  const mat=document.getElementById('novo-adm-mat').value.trim();
-  const nome=document.getElementById('novo-adm-nome').value.trim();
-  const msg=document.getElementById('adm-cadastro-msg');
-  if(!mat){showStatusMsg(msg,'Informe a matrícula.','err');return;}
-  if(mat===ADMIN_USER){showStatusMsg(msg,'Matrícula reservada.','err');return;}
-  if(state.admins[mat]){showStatusMsg(msg,'Matrícula já cadastrada.','err');return;}
-  state.admins[mat]={senha:mat,primeiroAcesso:true,nome};save();
-  document.getElementById('novo-adm-mat').value='';
-  document.getElementById('novo-adm-nome').value='';
-  renderAdminsCards();
-  showStatusMsg(msg,'Admin "'+mat+'" cadastrado. Senha inicial: matrícula.','ok');
-}
-function resetSenhaAdmin(mat){state.admins[mat]={...state.admins[mat],senha:mat,primeiroAcesso:true};save();renderAdminsCards();}
-function removerAdmin(mat){if(!confirm('Remover o administrador "'+mat+'"?'))return;delete state.admins[mat];save();renderAdminsCards();}
-function resetSenha(){resetSenhaInep(document.getElementById('reset-inep').value.trim());}
-function resetSenhaInep(inep){
-  const msg=document.getElementById('reset-msg');
-  if(!inep){showStatusMsg(msg,'Informe o INEP.','err');return;}
-  if(!state.dados.some(d=>d.inep===inep)){showStatusMsg(msg,'INEP não encontrado.','err');return;}
-  state.usuarios[inep]={senha:inep,primeiroAcesso:true};save();
-  document.getElementById('reset-inep').value='';
-  renderUsersCards();
-  showStatusMsg(msg,'Senha de '+inep+' resetada.','ok');
-}
-
-/* UTILS */
+/* ─── UTILS ─── */
+function extrairId(url){const m=(url||'').match(/\/d\/([a-zA-Z0-9-_]+)/);return m?m[1]:null;}
 function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function isActive(id){return document.getElementById(id).classList.contains('active');}
 function showErr(el,msg){el.textContent=msg;el.style.display='block';}
 function showStatusMsg(el,msg,type){el.textContent=msg;el.className='status-msg '+(type==='ok'?'status-ok':'status-err');el.style.display='block';setTimeout(()=>{el.style.display='none';},5000);}
 function setOpts(id,values,ph){document.getElementById(id).innerHTML=`<option value="">${ph}</option>`+values.map(v=>`<option>${v}</option>`).join('');}
 function badgeCls(s){const v=(s||'').toLowerCase();if(v.includes('aprov'))return'b-aprov';if(v.includes('reprov')||v.includes('retid'))return'b-reprov';if(v.includes('pend')||v.includes('transf'))return'b-pend';return'b-outro';}
-function switchTab(name){
-  const names=['dados','usuarios','config'];
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',names[i]===name));
-  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('tab-'+name).classList.add('active');
-  if(name==='usuarios'){renderAdminsCards();renderUsersCards();}
-}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
-load();
 </script>
 </body>
 </html>
