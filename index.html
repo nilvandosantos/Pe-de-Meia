@@ -192,7 +192,7 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
     <div class="auth-sub">Acesse com o código INEP, matrícula de administrador ou conta admin.</div>
     <div class="field">
       <label>Usuário</label>
-      <input type="text" id="login-user" class="mono" placeholder="INEP, matrícula ou admin" autocomplete="username"/>
+      <input type="text" id="login-user" class="mono" placeholder="INEP ou e-mail @see.pb.gov.br" autocomplete="username"/>
     </div>
     <div class="field">
       <label>Senha</label>
@@ -200,7 +200,7 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
     </div>
     <button class="btn-main" id="btn-login" onclick="doLogin()">Entrar</button>
     <div class="auth-error" id="login-err"></div>
-    <div class="auth-hint">Primeiro acesso? Use o INEP ou a matrícula como senha.<br>Você será solicitado a criar uma nova senha.</div>
+    <div class="auth-hint">Escolas: use o INEP. Administradores: use o e-mail @see.pb.gov.br.<br>No primeiro acesso a senha é o próprio usuário.</div>
   </div>
 </div>
 
@@ -209,7 +209,12 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
   <div class="auth-box">
     <div class="auth-mark"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg></div>
     <div class="auth-title">Crie sua nova senha</div>
-    <div class="auth-sub">Este é seu primeiro acesso. Defina uma senha pessoal para continuar.</div>
+    <div class="auth-sub">Este é seu primeiro acesso. Preencha os campos abaixo para continuar.</div>
+    <div class="field" id="field-email-wrap">
+      <label>E-mail institucional</label>
+      <input type="email" id="first-email" placeholder="seu.nome@see.pb.gov.br" autocomplete="email"/>
+      <div style="font-size:11px;color:var(--faint);margin-top:4px;">Somente e-mails @see.pb.gov.br são aceitos.</div>
+    </div>
     <div class="field">
       <label>Nova senha</label>
       <input type="password" id="new-pass" placeholder="Mínimo 6 caracteres" oninput="checkStrength()" autocomplete="new-password"/>
@@ -276,9 +281,9 @@ html,body{width:100%;min-height:100vh;font-family:var(--font);background:var(--b
       <div class="tab-panel" id="tab-usuarios">
         <div class="config-card">
           <div class="config-title">Cadastrar administrador</div>
-          <div class="config-sub">Novos administradores acessam com a matrícula como usuário e senha inicial. No primeiro acesso será solicitada nova senha.</div>
+          <div class="config-sub">Informe o e-mail institucional (@see.pb.gov.br). No primeiro acesso a senha será o próprio e-mail.</div>
           <div class="input-row" style="margin-bottom:8px;">
-            <input type="text" id="novo-adm-mat" class="finput mono" placeholder="Matrícula" style="max-width:160px;"/>
+            <input type="text" id="novo-adm-mat" class="finput" placeholder="e-mail@see.pb.gov.br" style="flex:2;"/>
             <input type="text" id="novo-adm-nome" class="finput" placeholder="Nome (opcional)" style="flex:2;"/>
             <button class="btn-sec" id="btn-cadastrar-adm" onclick="cadastrarAdmin()">Cadastrar</button>
           </div>
@@ -400,6 +405,11 @@ function fbOnline(ok){
   document.getElementById('fb-txt').textContent=ok?'online':'conectando';
 }
 
+/* ─── DOMÍNIO ─── */
+const DOMINIO='@see.pb.gov.br';
+function isDominio(v){return v.toLowerCase().endsWith(DOMINIO);}
+function isInep(v){return /^\d{7,8}$/.test(v);}
+
 /* ─── LOGIN ─── */
 window.doLogin=async function(){
   const user=document.getElementById('login-user').value.trim();
@@ -409,6 +419,12 @@ window.doLogin=async function(){
   err.style.display='none';
   if(!user){showErr(err,'Informe o usuário.');return;}
   if(!pass){showErr(err,'Informe a senha.');return;}
+
+  // Validação de domínio para não-INEP e não-admin
+  if(user!==ADMIN_USER && !isInep(user) && !isDominio(user)){
+    showErr(err,'Administradores devem usar e-mail @see.pb.gov.br.');return;
+  }
+
   btn.disabled=true; btn.textContent='Verificando...';
   try{
     if(user===ADMIN_USER){
@@ -418,11 +434,11 @@ window.doLogin=async function(){
     }
     const u=await fbUser(user);
     if(!u){
-      if(pass!==user){ showErr(err,'No primeiro acesso use o INEP ou matrícula como senha.'); return; }
-      st.loggedUser=user; st.isAdmin=false; irPrimeiroAcesso(); return;
+      if(pass!==user){ showErr(err,'No primeiro acesso use o INEP ou o e-mail como senha.'); return; }
+      st.loggedUser=user; st.isAdmin=isDominio(user); irPrimeiroAcesso(); return;
     }
     if(u.primeiroAcesso){
-      if(pass!==user){ showErr(err,'Senha incorreta. No primeiro acesso use o INEP ou matrícula.'); return; }
+      if(pass!==user){ showErr(err,'Senha incorreta. No primeiro acesso use o INEP ou e-mail como senha.'); return; }
       st.loggedUser=user; st.isAdmin=u.role==='admin'; irPrimeiroAcesso(); return;
     }
     if(u.senha!==pass){ showErr(err,'Senha incorreta.'); return; }
@@ -443,6 +459,11 @@ function irPrimeiroAcesso(){
   document.getElementById('new-pass').value='';
   document.getElementById('new-pass-confirm').value='';
   document.getElementById('first-err').style.display='none';
+  // Campo e-mail só aparece para escolas (INEP); admins já têm e-mail como usuário
+  const isEscola=isInep(st.loggedUser);
+  const emailWrap=document.getElementById('field-email-wrap');
+  emailWrap.style.display=isEscola?'block':'none';
+  if(!isEscola) document.getElementById('first-email').value='';
 }
 
 window.doFirstAccess=async function(){
@@ -450,12 +471,29 @@ window.doFirstAccess=async function(){
   const np2=document.getElementById('new-pass-confirm').value;
   const err=document.getElementById('first-err');
   const btn=document.getElementById('btn-first');
+  const isEscola=isInep(st.loggedUser);
+
+  // Validação e-mail (só para escolas)
+  if(isEscola){
+    const email=document.getElementById('first-email').value.trim().toLowerCase();
+    if(!email){showErr(err,'Informe o e-mail institucional.');return;}
+    if(!isDominio(email)){showErr(err,'Use apenas e-mail @see.pb.gov.br.');return;}
+  }
+
   if(np.length<6){showErr(err,'Mínimo 6 caracteres.');return;}
   if(np!==np2){showErr(err,'As senhas não coincidem.');return;}
   btn.disabled=true; btn.textContent='Salvando...';
   try{
     const ex=await fbUser(st.loggedUser);
-    await fbSetUser(st.loggedUser,{ senha:np, primeiroAcesso:false, role:ex?(ex.role||'escola'):'escola', nome:ex?(ex.nome||''):'' });
+    const email=isEscola
+      ?document.getElementById('first-email').value.trim().toLowerCase()
+      :st.loggedUser; // para admins o próprio e-mail é o usuário
+    await fbSetUser(st.loggedUser,{
+      senha:np, primeiroAcesso:false,
+      role:ex?(ex.role||'escola'):'escola',
+      nome:ex?(ex.nome||''):'',
+      email
+    });
     await entrarApp();
   }catch{ showErr(err,'Erro ao salvar. Tente novamente.'); }
   finally{ btn.disabled=false; btn.textContent='Salvar e entrar'; }
@@ -807,7 +845,7 @@ window.renderAdminsCards=async function(){
     const cls=a.primeiroAcesso?'b-pend':'b-aprov';
     return `<div class="user-card">
       <div class="uc-top">
-        <div><div class="uc-id">${mat}</div><div class="uc-sub">${esc(a.nome||'Sem nome')}</div></div>
+        <div style="min-width:0;"><div class="uc-id" style="font-size:12px;word-break:break-all;">${esc(mat)}</div><div class="uc-sub">${esc(a.nome||'Sem nome')}</div></div>
         <span class="badge ${cls}" style="flex-shrink:0;">${status}</span>
       </div>
       <div class="uc-actions">
@@ -820,21 +858,22 @@ window.renderAdminsCards=async function(){
 
 /* ─── GESTÃO USUÁRIOS ─── */
 window.cadastrarAdmin=async function(){
-  const mat=document.getElementById('novo-adm-mat').value.trim();
+  const mat=document.getElementById('novo-adm-mat').value.trim().toLowerCase();
   const nome=document.getElementById('novo-adm-nome').value.trim();
   const msg=document.getElementById('adm-cadastro-msg');
   const btn=document.getElementById('btn-cadastrar-adm');
-  if(!mat){showStatusMsg(msg,'Informe a matrícula.','err');return;}
-  if(mat===ADMIN_USER){showStatusMsg(msg,'Matrícula reservada.','err');return;}
+  if(!mat){showStatusMsg(msg,'Informe o e-mail.','err');return;}
+  if(mat===ADMIN_USER){showStatusMsg(msg,'Usuário reservado.','err');return;}
+  if(!isDominio(mat)){showStatusMsg(msg,'Use apenas e-mail @see.pb.gov.br.','err');return;}
   btn.disabled=true; btn.textContent='Cadastrando...';
   try{
     const ex=await fbUser(mat);
-    if(ex){showStatusMsg(msg,'Matrícula já cadastrada.','err');return;}
-    await fbSetUser(mat,{senha:mat,primeiroAcesso:true,role:'admin',nome});
+    if(ex){showStatusMsg(msg,'E-mail já cadastrado.','err');return;}
+    await fbSetUser(mat,{senha:mat,primeiroAcesso:true,role:'admin',nome,email:mat});
     document.getElementById('novo-adm-mat').value='';
     document.getElementById('novo-adm-nome').value='';
     await renderAdminsCards();
-    showStatusMsg(msg,'Admin "'+mat+'" cadastrado. Senha inicial: matrícula.','ok');
+    showStatusMsg(msg,'Admin "'+mat+'" cadastrado. Senha inicial: o próprio e-mail.','ok');
   }catch{showStatusMsg(msg,'Erro ao cadastrar.','err');}
   finally{btn.disabled=false;btn.textContent='Cadastrar';}
 };
@@ -843,7 +882,7 @@ window.resetSenhaAdmin=async function(mat){
   const u=await fbUser(mat);
   await fbSetUser(mat,{...(u||{}),senha:mat,primeiroAcesso:true});
   await renderAdminsCards();
-  showStatusMsg(document.getElementById('adm-cadastro-msg'),'Senha de '+mat+' resetada.','ok');
+  showStatusMsg(document.getElementById('adm-cadastro-msg'),'Senha de '+mat+' resetada. Senha inicial: o próprio e-mail.','ok');
 };
 
 window.removerAdmin=async function(mat){
